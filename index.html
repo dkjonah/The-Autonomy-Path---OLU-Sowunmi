@@ -1,0 +1,2898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Autonomy Path · Olu Sowunmi · Mid-Year Diagnostic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --black: #1A1A1A;
+    --ivory: #F5F3ED;
+    --cream: #EAE6DA;
+    --taupe: #D3CCC0;
+    --gold: #D4AF37;
+    --gold-soft: #C9A437;
+    --gold-matte: #A8893E;
+    --ink: #1A1A1A;
+    --ink-soft: rgba(26,26,26,0.66);
+    --ink-faint: rgba(26,26,26,0.36);
+    --line: rgba(26,26,26,0.12);
+    --line-strong: rgba(26,26,26,0.22);
+    --ivory-soft: rgba(245,243,237,0.72);
+    --ivory-faint: rgba(245,243,237,0.42);
+
+    --display: "Poiret One", "League Spartan", Georgia, serif;
+    --system: "Montserrat", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+    --page-w: 880px;
+    --page-h: 1180px;
+
+    --ease: cubic-bezier(.55,.08,.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--system);
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #1f1d1a 0%, #0e0d0b 60%, #050505 100%);
+    color: var(--ivory);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- Stage ---------- */
+  .stage {
+    position: fixed; inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 22px 28px 22px;
+    gap: 14px;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    color: var(--ivory);
+  }
+  .brand {
+    display: flex; align-items: baseline; gap: 14px;
+    font-family: var(--system);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ivory);
+  }
+  .brand .dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--gold); border-radius: 50%;
+    transform: translateY(-2px);
+  }
+  .brand .sub {
+    color: var(--ivory-soft);
+    font-weight: 400;
+    letter-spacing: 0.18em;
+  }
+  .progress {
+    display: flex; align-items: center; gap: 18px;
+    color: var(--ivory-soft);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .progress-bar {
+    width: 220px; height: 1px;
+    background: rgba(245,243,237,0.18);
+    position: relative;
+  }
+  .progress-bar .fill {
+    position: absolute; left: 0; top: -1px; height: 3px;
+    background: var(--gold);
+    width: 0%;
+    transition: width 600ms var(--ease);
+  }
+  .counter b {
+    color: var(--gold);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Book ---------- */
+  .book-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    perspective: 2400px;
+  }
+  .book {
+    position: relative;
+    width: var(--page-w);
+    height: var(--page-h);
+    transform-style: preserve-3d;
+    transform-origin: center center;
+    transform: scale(var(--book-scale, 1));
+    transition: transform 200ms var(--ease);
+  }
+  /* Soft shadow under book */
+  .book::after {
+    content: "";
+    position: absolute;
+    left: 4%; right: 4%;
+    bottom: -28px; height: 40px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%);
+    filter: blur(8px);
+    z-index: -1;
+  }
+
+  /* ---------- Pages ---------- */
+  .page {
+    position: absolute;
+    inset: 0;
+    background: var(--ivory);
+    color: var(--ink);
+    overflow: hidden;
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,0.55),
+      0 12px 28px -10px rgba(0,0,0,0.45),
+      inset 0 0 0 1px rgba(0,0,0,0.04);
+    transform-origin: left center;
+    transform: rotateY(0deg);
+    transition: transform 900ms var(--ease), box-shadow 900ms var(--ease);
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+  /* Subtle paper texture via gradient stack */
+  .page::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.045) 0%, transparent 4%, transparent 96%, rgba(0,0,0,0.045) 100%),
+      radial-gradient(1200px 800px at 0% 0%, rgba(212,175,55,0.05), transparent 60%);
+    pointer-events: none;
+  }
+  /* Spine shadow */
+  .page::after {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: 24px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.18), transparent);
+    pointer-events: none;
+  }
+
+  /* Stack order */
+  .page.is-current { z-index: 10; }
+  .page.is-prev    { z-index: 9; transform: rotateY(-180deg); }
+  .page.is-next    { z-index: 8; transform: rotateY(0deg); }
+  .page.is-hidden  { z-index: 1; transform: rotateY(0deg); visibility: hidden; }
+
+  /* Active flipping page boost */
+  .page.flipping {
+    box-shadow:
+      40px 30px 60px -10px rgba(0,0,0,0.55),
+      0 12px 28px -10px rgba(0,0,0,0.45);
+  }
+
+  /* Dark page variant */
+  .page--dark {
+    background: var(--black);
+    color: var(--ivory);
+  }
+  .page--dark::before {
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.04) 0%, transparent 4%, transparent 96%, rgba(0,0,0,0.4) 100%),
+      radial-gradient(1200px 800px at 100% 0%, rgba(212,175,55,0.08), transparent 60%);
+  }
+  .page--dark::after {
+    background: linear-gradient(90deg, rgba(0,0,0,0.5), transparent);
+  }
+
+  /* Page content scaffolding */
+  .page-inner {
+    position: relative;
+    height: 100%;
+    padding: 72px 78px 64px 96px;
+    display: flex;
+    flex-direction: column;
+  }
+  .page--dark .page-inner { padding-left: 96px; padding-right: 78px; }
+
+  .page-meta {
+    position: absolute;
+    bottom: 28px; left: 96px; right: 78px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .page--dark .page-meta { color: rgba(245,243,237,0.45); }
+  .page-meta .num {
+    font-family: var(--display);
+    font-size: 22px;
+    letter-spacing: 0;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .page-meta .rule {
+    flex: 1; height: 1px;
+    background: var(--line);
+    margin: 0 18px;
+  }
+  .page--dark .page-meta .rule { background: rgba(245,243,237,0.18); }
+
+  /* ---------- Typography primitives ---------- */
+  .eyebrow {
+    font-family: var(--system);
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold-matte);
+  }
+  .page--dark .eyebrow { color: var(--gold); }
+
+  h1.display {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 88px;
+    line-height: 0.96;
+    letter-spacing: -0.01em;
+    margin-top: 8px;
+    text-wrap: balance;
+  }
+  h2.section {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1.02;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  h3.sub {
+    font-family: var(--system);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .page--dark h3.sub { color: var(--ivory); }
+  p.body {
+    font-family: var(--system);
+    font-weight: 400;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+    max-width: 62ch;
+  }
+  .page--dark p.body { color: rgba(245,243,237,0.78); }
+  p.lead {
+    font-family: var(--system);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink);
+    text-wrap: pretty;
+    max-width: 56ch;
+  }
+  .page--dark p.lead { color: var(--ivory); }
+  .pull {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.18;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  .page--dark .pull { color: var(--ivory); }
+  .pull em {
+    font-style: normal;
+    color: var(--gold-matte);
+  }
+  .page--dark .pull em { color: var(--gold); }
+
+  .gold-rule {
+    width: 56px; height: 2px;
+    background: var(--gold);
+    border: 0;
+    margin: 18px 0 22px;
+  }
+  .thin-rule {
+    height: 1px;
+    background: var(--line);
+    border: 0;
+    margin: 24px 0;
+  }
+  .page--dark .thin-rule { background: rgba(245,243,237,0.16); }
+
+  /* Folio numerals (giant background numerals) */
+  .folio {
+    position: absolute;
+    font-family: var(--display);
+    font-weight: 400;
+    color: var(--gold);
+    opacity: 0.10;
+    line-height: 0.8;
+    pointer-events: none;
+    user-select: none;
+  }
+  .page--dark .folio { opacity: 0.14; }
+
+  /* ---------- Cover (page 1) ---------- */
+  .cover {
+    padding: 0;
+  }
+  .cover .frame {
+    position: absolute; inset: 28px;
+    border: 1px solid rgba(212,175,55,0.35);
+    pointer-events: none;
+  }
+  .cover .frame::before, .cover .frame::after {
+    content: ""; position: absolute; background: var(--gold);
+  }
+  .cover .frame::before { top: -1px; left: 50%; width: 90px; height: 1px; transform: translateX(-50%); }
+  .cover .frame::after  { bottom: -1px; left: 50%; width: 90px; height: 1px; transform: translateX(-50%); }
+  .cover-inner {
+    position: relative; height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 88px 78px 78px;
+    color: var(--ivory);
+  }
+  .cover-top {
+    display: flex; align-items: center; justify-content: space-between;
+    color: rgba(245,243,237,0.6);
+    font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; font-weight: 500;
+  }
+  .cover-mark {
+    width: 44px; height: 44px;
+    border: 1px solid var(--gold);
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--gold);
+  }
+  .cover-center {
+    align-self: center;
+  }
+  .cover-kicker {
+    font-family: var(--system); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.36em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+  .cover h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 124px;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: var(--ivory);
+    text-wrap: balance;
+  }
+  .cover h1 .amp {
+    color: var(--gold);
+    font-style: italic;
+  }
+  .cover-sub {
+    margin-top: 28px;
+    max-width: 36ch;
+    font-size: 16px;
+    line-height: 1.55;
+    color: rgba(245,243,237,0.7);
+    font-weight: 300;
+  }
+  .cover-bottom {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px;
+  }
+  .cover-bottom .meta {
+    font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(245,243,237,0.55); font-weight: 500;
+  }
+  .cover-bottom .meta b { display: block; color: var(--ivory); font-weight: 600; margin-top: 6px; letter-spacing: 0.22em; }
+  .cover-bottom .center {
+    font-family: var(--display); color: var(--gold); font-size: 24px;
+  }
+  .cover-bottom .right { text-align: right; }
+
+  /* ---------- Contents page ---------- */
+  .toc-list { display: grid; gap: 2px; margin-top: 14px; }
+  .toc-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 200ms var(--ease), padding 200ms var(--ease);
+  }
+  .toc-row:hover { background: rgba(212,175,55,0.06); padding-left: 8px; padding-right: 8px; }
+  .toc-row .n {
+    font-family: var(--display);
+    font-size: 24px; color: var(--gold);
+    letter-spacing: 0;
+    line-height: 1;
+  }
+  .toc-row .t {
+    font-family: var(--system);
+    font-size: 14px; font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0;
+  }
+  .toc-row .t small {
+    display: block;
+    font-weight: 400;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .toc-row .p {
+    font-family: var(--system);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ---------- Pyramid ---------- */
+  .pyramid-wrap {
+    display: grid; grid-template-columns: 360px 1fr; gap: 48px; margin-top: 24px;
+  }
+  .pyramid {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    gap: 4px;
+  }
+  .pyramid .row {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cream);
+    height: 60px;
+    color: var(--ink);
+    font-family: var(--system);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .pyramid .row .badge {
+    position: absolute; left: 12px;
+    font-family: var(--display);
+    font-size: 18px;
+    color: var(--gold-matte);
+    letter-spacing: 0;
+  }
+  .pyramid .row.r5 { width: 30%; margin: 0 auto; background: var(--black); color: var(--ivory); }
+  .pyramid .row.r5 .badge { color: var(--gold); }
+  .pyramid .row.r3 { width: 60%; margin: 0 auto; background: var(--taupe); }
+  .pyramid .row.line {
+    background: transparent;
+    height: 1px; width: 100%;
+    border-top: 1px dashed var(--gold-matte);
+    margin: 8px 0;
+    color: var(--gold-matte);
+    font-size: 9px;
+    letter-spacing: 0.32em;
+  }
+  .pyramid .row.line span {
+    position: absolute; left: 0; right: 0; top: -8px; text-align: center;
+    background: var(--ivory); padding: 0 12px; display: inline-block; width: max-content; margin: 0 auto;
+    left: 50%; transform: translateX(-50%);
+  }
+  .pyramid .row.r1 { width: 80%; margin: 0 auto; background: var(--cream); }
+  .pyramid .row.r0 { width: 100%; background: #E2DCCE; }
+  .pyramid .marker {
+    position: absolute;
+    right: -120px;
+    background: var(--black);
+    color: var(--ivory);
+    font-family: var(--system);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pyramid .marker::before {
+    content: ""; position: absolute; left: -10px; top: 50%; transform: translateY(-50%);
+    border: 5px solid transparent; border-right-color: var(--black);
+  }
+  .pyramid .marker.you-r0 { bottom: 16px; }
+  .pyramid .marker.you-r1 { bottom: 92px; }
+  .pyramid .marker.target { bottom: 200px; background: var(--gold); color: var(--black); }
+  .pyramid .marker.target::before { border-right-color: var(--gold); }
+
+  /* ---------- Generic grids ---------- */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  /* Comparison table */
+  .compare {
+    margin-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .compare .row {
+    display: grid; grid-template-columns: 1fr 28px 1fr;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    align-items: center;
+    gap: 12px;
+  }
+  .compare .row .lbl-l, .compare .row .lbl-r {
+    font-family: var(--system); font-size: 13px; font-weight: 500; color: var(--ink-soft);
+  }
+  .compare .row .lbl-r { color: var(--ink); font-weight: 600; }
+  .compare .row .vs {
+    font-family: var(--display); color: var(--gold); font-size: 16px; text-align: center;
+  }
+
+  /* Pillar cards */
+  .pillar-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    margin-top: 28px;
+  }
+  .pillar {
+    border-top: 2px solid var(--gold);
+    padding-top: 14px;
+  }
+  .pillar .n {
+    font-family: var(--display); font-size: 22px; color: var(--gold-matte); line-height: 1;
+  }
+  .pillar h4 {
+    font-family: var(--system); font-size: 14px; font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-top: 6px; color: var(--ink);
+  }
+  .pillar .ask {
+    font-family: var(--display); font-size: 15px; color: var(--ink-soft);
+    margin-top: 8px; line-height: 1.3;
+  }
+  .pillar .state {
+    margin-top: 14px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600;
+  }
+  .pillar .state b { color: var(--ink); display: block; margin-top: 4px; letter-spacing: 0.04em; text-transform: none; font-size: 13px; }
+  .pillar .shift {
+    margin-top: 14px;
+    font-size: 12.5px; line-height: 1.5; color: var(--ink);
+    padding-top: 10px; border-top: 1px solid var(--line);
+  }
+
+  /* Architecture stack (page 6) */
+  .stack {
+    margin-top: 28px;
+    display: grid; gap: 14px;
+  }
+  .layer {
+    position: relative;
+    background: var(--cream);
+    padding: 22px 28px 22px 80px;
+    border-left: 3px solid var(--gold);
+  }
+  .layer .ord {
+    position: absolute; left: 22px; top: 22px;
+    font-family: var(--display); font-size: 32px; color: var(--gold-matte); line-height: 1;
+  }
+  .layer h4 {
+    font-family: var(--system); font-weight: 700; font-size: 14px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink);
+  }
+  .layer h4 b { color: var(--gold-matte); }
+  .layer p { font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin-top: 6px; max-width: 56ch; }
+  .layer.center {
+    background: var(--black); color: var(--ivory); border-left-color: var(--gold);
+  }
+  .layer.center h4 { color: var(--ivory); }
+  .layer.center h4 b { color: var(--gold); }
+  .layer.center p { color: rgba(245,243,237,0.72); }
+  .layer.center .ord { color: var(--gold); }
+
+  /* Architecture flow (page 8 platforms) */
+  .platforms {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px;
+  }
+  .platform {
+    border: 1px solid var(--line);
+    padding: 20px 22px;
+    background: #FAF8F2;
+  }
+  .platform.primary {
+    background: var(--black); color: var(--ivory);
+    grid-column: 1 / -1;
+    border-color: var(--gold);
+    display: grid; grid-template-columns: 80px 1fr 240px; align-items: center; gap: 24px;
+  }
+  .platform.primary h4 { color: var(--ivory); }
+  .platform.primary p { color: rgba(245,243,237,0.72); }
+  .platform .num {
+    font-family: var(--display); font-size: 36px; color: var(--gold-matte); line-height: 1;
+  }
+  .platform.primary .num { color: var(--gold); font-size: 52px; }
+  .platform h4 { font-family: var(--system); font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; color: var(--ink); }
+  .platform h4 .role { font-weight: 400; font-size: 11px; letter-spacing: 0.22em; color: var(--ink-faint); display: block; margin-top: 4px; }
+  .platform.primary h4 .role { color: rgba(245,243,237,0.55); }
+  .platform p { font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 10px; }
+  .platform .freq {
+    margin-top: 12px; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-matte); font-weight: 600;
+  }
+  .platform.primary .freq { color: var(--gold); }
+
+  /* Speaking topics list */
+  .topics {
+    display: grid; gap: 0;
+    margin-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .topic {
+    display: grid; grid-template-columns: 64px 1fr 140px;
+    gap: 18px; padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .topic .n { font-family: var(--display); font-size: 28px; color: var(--gold); line-height: 1; }
+  .topic .title { font-family: var(--system); font-weight: 700; font-size: 14.5px; color: var(--ink); line-height: 1.35; }
+  .topic .title small { display: block; margin-top: 6px; font-weight: 400; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+  .topic .price { font-family: var(--system); font-size: 11px; letter-spacing: 0.22em; color: var(--ink-faint); text-transform: uppercase; font-weight: 600; text-align: right; }
+  .topic .price b { display: block; font-family: var(--display); font-size: 22px; color: var(--gold-matte); margin-top: 4px; letter-spacing: 0; text-transform: none; }
+
+  /* Revenue tiles */
+  .rev-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px;
+  }
+  .rev {
+    border: 1px solid var(--line);
+    padding: 22px 24px;
+    background: #FAF8F2;
+    position: relative;
+  }
+  .rev .tag { font-family: var(--system); font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-matte); font-weight: 600; }
+  .rev h4 { font-family: var(--display); font-size: 30px; color: var(--ink); margin-top: 4px; line-height: 1.05; }
+  .rev p { font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 10px; max-width: 36ch; }
+  .rev .range {
+    margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line);
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600;
+  }
+  .rev .range b { font-family: var(--display); font-size: 22px; color: var(--gold-matte); letter-spacing: 0; text-transform: none; }
+
+  /* Timeline */
+  .timeline {
+    margin-top: 32px;
+    position: relative;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px;
+    width: 1px; background: var(--line-strong);
+  }
+  .timeline .step {
+    position: relative; padding: 0 0 28px 0;
+  }
+  .timeline .step::before {
+    content: ""; position: absolute; left: -28px; top: 6px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--ivory); border: 2px solid var(--gold);
+  }
+  .timeline .step.done::before {
+    background: var(--gold);
+  }
+  .timeline .step .date {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold-matte); font-weight: 700;
+  }
+  .timeline .step h5 {
+    font-family: var(--system); font-weight: 700; font-size: 14px; color: var(--ink);
+    margin-top: 4px;
+  }
+  .timeline .step p {
+    font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 6px;
+    max-width: 50ch;
+  }
+
+  /* Checklist (gaps) */
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; margin-top: 16px; }
+  .check {
+    display: grid; grid-template-columns: 22px 1fr auto;
+    gap: 12px; align-items: baseline;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+    font-size: 13px; line-height: 1.45; color: var(--ink);
+  }
+  .check .mk {
+    width: 16px; height: 16px; border: 1.5px solid var(--ink-faint);
+    display: inline-block; margin-top: 2px; position: relative;
+  }
+  .check.done .mk { background: var(--gold); border-color: var(--gold); }
+  .check.done .mk::after {
+    content: ""; position: absolute;
+    left: 3px; top: 0px; width: 5px; height: 9px;
+    border: solid var(--black); border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .check.partial .mk { border-color: var(--gold-matte); }
+  .check.partial .mk::after {
+    content: ""; position: absolute; left: 2px; top: 5px;
+    width: 8px; height: 2px; background: var(--gold-matte);
+  }
+  .check .due {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600;
+  }
+  .check.done .due { color: var(--gold-matte); }
+
+  /* The Choice page */
+  .choice {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border-top: 1px solid rgba(245,243,237,0.18);
+    margin-top: 28px;
+  }
+  .choice .opt {
+    padding: 28px 28px 28px 0;
+    border-right: 1px solid rgba(245,243,237,0.18);
+  }
+  .choice .opt:last-child { border-right: 0; padding-left: 28px; padding-right: 0; }
+  .choice .opt .lbl {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(245,243,237,0.55); font-weight: 600;
+  }
+  .choice .opt h4 {
+    font-family: var(--display); font-size: 36px; line-height: 1.05; margin-top: 6px;
+    color: var(--ivory);
+  }
+  .choice .opt.B h4 { color: var(--gold); }
+  .choice .opt ul {
+    margin-top: 18px; list-style: none; display: grid; gap: 10px;
+  }
+  .choice .opt li {
+    font-size: 13px; line-height: 1.55; color: rgba(245,243,237,0.7);
+    padding-left: 22px; position: relative;
+  }
+  .choice .opt li::before {
+    content: ""; position: absolute; left: 0; top: 9px;
+    width: 10px; height: 1px; background: var(--gold-matte);
+  }
+  .choice .opt.B li::before { background: var(--gold); }
+
+  /* Lists on light pages */
+  ul.dash {
+    list-style: none; display: grid; gap: 8px; margin-top: 14px;
+  }
+  ul.dash li {
+    padding-left: 22px; position: relative; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft);
+  }
+  ul.dash li::before {
+    content: ""; position: absolute; left: 0; top: 12px; width: 12px; height: 1px; background: var(--gold-matte);
+  }
+  ul.dash li b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Online Presence: Flow, Types, Phases ---------- */
+  .flow { display: grid; gap: 0; }
+  .flow-node {
+    background: var(--cream);
+    padding: 18px 24px;
+    border-left: 3px solid var(--gold);
+    position: relative;
+  }
+  .flow-node.origin {
+    background: transparent;
+    border-left: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    text-align: center; padding: 14px;
+  }
+  .flow-node.primary {
+    background: var(--black); color: var(--ivory);
+    border-left-color: var(--gold);
+    padding: 22px 26px;
+  }
+  .flow-tag {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold-matte); font-weight: 600;
+  }
+  .flow-node.primary .flow-tag { color: var(--gold); }
+  .flow-title {
+    font-family: var(--display); font-size: 30px; color: var(--ink); line-height: 1.05; margin-top: 4px;
+  }
+  .flow-node.primary .flow-title { color: var(--ivory); }
+  .flow-node.origin .flow-title { font-size: 24px; }
+  .flow-title-sm {
+    font-family: var(--system); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink); margin-top: 4px;
+  }
+  .flow-sub {
+    font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 8px; max-width: 62ch;
+  }
+  .flow-node.primary .flow-sub { color: rgba(245,243,237,0.78); }
+  .flow-line {
+    width: 1px; height: 22px; background: var(--gold-matte);
+    margin: 0 auto;
+  }
+  .flow-branches {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    position: relative;
+  }
+  .flow-branch {
+    background: #FAF8F2;
+    border-top: 2px solid var(--gold-matte);
+    padding: 14px 16px 16px;
+  }
+  .flow-branch .flow-sub { font-size: 11.5px; margin-top: 6px; }
+
+  /* Five types */
+  .types {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin-top: 24px;
+  }
+  .type-card {
+    background: #FAF8F2;
+    border: 1px solid var(--line);
+    padding: 18px 20px 16px;
+  }
+  .t-head { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: baseline; }
+  .t-num { font-family: var(--display); font-size: 32px; color: var(--gold); line-height: 1; }
+  .t-name { font-family: var(--system); font-weight: 700; font-size: 14px; color: var(--ink); letter-spacing: 0.04em; }
+  .t-meta { font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin-top: 3px; }
+  .t-desc { font-size: 12.5px; line-height: 1.55; color: var(--ink-soft); margin-top: 10px; }
+  .t-power { font-size: 11.5px; line-height: 1.5; color: var(--ink); margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line); }
+  .t-power b { color: var(--gold-matte); font-weight: 700; }
+  .t-eg { font-family: var(--system); font-style: italic; font-size: 11.5px; color: var(--ink-soft); margin-top: 6px; line-height: 1.5; }
+
+  /* Phases */
+  .phases {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin-top: 24px;
+  }
+  .phase {
+    background: #FAF8F2;
+    padding: 20px 22px;
+    border-top: 3px solid var(--gold);
+    position: relative;
+  }
+  .phase-num { font-family: var(--display); font-size: 14px; color: var(--gold-matte); letter-spacing: 0.2em; }
+  .phase-month { font-family: var(--display); font-size: 38px; color: var(--ink); line-height: 1; margin-top: 4px; }
+  .phase-name { font-family: var(--system); font-weight: 700; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-matte); margin-top: 4px; }
+  .phase-goal { font-size: 12.5px; line-height: 1.5; color: var(--ink); margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-weight: 500; }
+  .phase-list { list-style: none; margin-top: 12px; display: grid; gap: 8px; }
+  .phase-list li { font-size: 11.5px; line-height: 1.55; color: var(--ink-soft); padding-left: 16px; position: relative; }
+  .phase-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 1px; background: var(--gold-matte); }
+  .phase-list li b { color: var(--ink); font-weight: 700; }
+
+  /* Weekly rhythm */
+  .weekly {
+    margin-top: 22px;
+    background: var(--black); color: var(--ivory);
+    padding: 22px 26px;
+  }
+  .weekly-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 14px; }
+  .weekly-tag { font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+  .weekly-sub { font-size: 11px; color: rgba(245,243,237,0.6); letter-spacing: 0.04em; }
+  .weekly-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1.4fr; gap: 12px; }
+  .day { padding: 12px 14px; border-left: 2px solid var(--gold); }
+  .day.flex { border-left-color: rgba(212,175,55,0.5); }
+  .day-name { font-family: var(--system); font-weight: 700; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .day-task { font-size: 11.5px; line-height: 1.45; color: rgba(245,243,237,0.85); margin-top: 6px; }
+  .day-time { font-family: var(--display); font-size: 16px; color: var(--ivory); margin-top: 8px; }
+
+  /* ---------- Profile vs Newsletter ---------- */
+  .li-compare {
+    display: grid; grid-template-columns: 1fr 1px 1fr; gap: 32px;
+    margin-top: 26px;
+  }
+  .li-divider { background: var(--line); }
+  .li-col { display: flex; flex-direction: column; }
+  .li-role {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--ink-faint); font-weight: 600;
+  }
+  .li-role.gold { color: var(--gold-matte); }
+  .li-name {
+    font-family: var(--display); font-size: 38px; color: var(--ink);
+    line-height: 1.02; margin-top: 4px;
+  }
+  .li-meta {
+    font-family: var(--system); font-size: 11.5px; color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .li-fn {
+    font-family: var(--display); font-size: 20px; color: var(--ink);
+    margin-top: 16px; padding: 10px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .li-fn.gold { color: var(--gold-matte); }
+  .li-bullets {
+    list-style: none; margin-top: 14px; display: grid; gap: 10px;
+  }
+  .li-bullets li {
+    font-size: 12.5px; line-height: 1.55; color: var(--ink-soft);
+  }
+  .li-bullets li b { color: var(--ink); font-weight: 700; }
+  .li-footer {
+    margin-top: auto; padding-top: 22px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px;
+    border-top: 1px solid var(--line);
+  }
+  .li-stat {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .li-stat:last-child, .li-stat:nth-last-child(2) { border-bottom: 0; }
+  .li-stat-l {
+    font-family: var(--display); font-size: 22px; color: var(--gold-matte);
+    min-width: 120px;
+  }
+  .li-stat-r {
+    font-family: var(--system); font-size: 14px; color: var(--ink); font-weight: 500;
+  }
+
+  /* ---------- Name the Letter ---------- */
+  .names {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-top: 22px;
+  }
+  .name-card {
+    background: rgba(245,243,237,0.04);
+    border: 1px solid rgba(212,175,55,0.28);
+    padding: 14px 16px;
+  }
+  .name-num {
+    font-family: var(--display); font-size: 14px; color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .name-title {
+    font-family: var(--display); font-size: 26px; color: var(--ivory);
+    line-height: 1.05; margin-top: 2px;
+  }
+  .name-source {
+    font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold-matte); font-weight: 600; margin-top: 8px;
+  }
+  .name-rationale {
+    font-size: 11.5px; line-height: 1.5; color: rgba(245,243,237,0.78);
+    margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(245,243,237,0.16);
+  }
+  .write-it {
+    margin-top: 18px; padding: 18px 22px;
+    background: var(--gold);
+    color: var(--black);
+  }
+  .write-head { display: flex; align-items: baseline; gap: 18px; }
+  .write-tag {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.32em;
+    text-transform: uppercase; color: rgba(26,26,26,0.65); font-weight: 700;
+  }
+  .write-title {
+    font-family: var(--display); font-size: 30px; color: var(--black);
+    line-height: 1;
+  }
+  .write-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
+    margin-top: 12px;
+  }
+  .write-reason { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: baseline; }
+  .write-n {
+    font-family: var(--display); font-size: 14px; color: rgba(26,26,26,0.55);
+    line-height: 1;
+  }
+  .write-reason p {
+    font-size: 11.5px; line-height: 1.5; color: var(--black);
+  }
+  .write-reason p b { font-weight: 700; }
+  .write-rule {
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid rgba(26,26,26,0.22);
+    font-family: var(--display); font-size: 22px; color: var(--black);
+  }
+  .write-rule em { font-style: italic; }
+
+  /* ---------- Three Audiences ---------- */
+  .audiences {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin-top: 24px;
+  }
+  .aud-card {
+    background: #FAF8F2;
+    border-top: 3px solid var(--gold);
+    padding: 18px 20px;
+    display: flex; flex-direction: column;
+  }
+  .aud-num { font-family: var(--display); font-size: 22px; color: var(--gold-matte); line-height: 1; }
+  .aud-label { font-family: var(--display); font-size: 30px; color: var(--ink); line-height: 1.02; margin-top: 4px; }
+  .aud-need { font-family: var(--system); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-matte); font-weight: 600; margin-top: 8px; }
+  .aud-desc { font-size: 12px; line-height: 1.55; color: var(--ink-soft); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .aud-listen {
+    margin-top: auto; padding-top: 14px;
+    background: rgba(212,175,55,0.08); padding: 12px 14px; margin-left: -20px; margin-right: -20px; margin-bottom: -16px;
+  }
+  .aud-l-tag { font-family: var(--system); font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold-matte); font-weight: 700; }
+  .aud-l-text { font-family: var(--display); font-size: 16px; color: var(--ink); margin-top: 4px; line-height: 1.3; }
+
+  .positioning {
+    margin-top: 22px; padding: 22px 26px;
+    background: var(--black); color: var(--ivory);
+  }
+  .positioning-tag {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700;
+  }
+  .positioning-quote {
+    font-family: var(--display); font-size: 26px; color: var(--ivory); line-height: 1.25;
+    margin-top: 8px; max-width: 62ch;
+  }
+  .positioning-quote em { color: var(--gold); font-style: italic; }
+  .positioning-checks {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(245,243,237,0.16);
+  }
+  .positioning-checks span {
+    font-family: var(--system); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(245,243,237,0.78); font-weight: 600; padding-left: 18px; position: relative;
+  }
+  .positioning-checks span::before {
+    content: ""; position: absolute; left: 0; top: 5px; width: 10px; height: 5px;
+    border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
+    transform: rotate(-45deg);
+  }
+
+  /* ---------- Phase Shift ---------- */
+  .phase-shift {
+    display: grid; grid-template-columns: 1fr 120px 1fr; gap: 18px;
+    margin-top: 24px; align-items: stretch;
+  }
+  .ps-col {
+    background: rgba(245,243,237,0.05);
+    border: 1px solid rgba(245,243,237,0.16);
+    padding: 20px 22px;
+  }
+  .ps-col.primary {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--black);
+  }
+  .ps-period {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700;
+  }
+  .ps-col.primary .ps-period { color: rgba(26,26,26,0.7); }
+  .ps-label {
+    font-family: var(--display); font-size: 14px; color: rgba(245,243,237,0.55); letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .ps-col.primary .ps-label { color: rgba(26,26,26,0.6); }
+  .ps-title {
+    font-family: var(--display); font-size: 32px; color: var(--ivory); line-height: 1.05;
+    margin-top: 4px;
+  }
+  .ps-col.primary .ps-title { color: var(--black); }
+  .ps-desc {
+    font-size: 12px; line-height: 1.55; color: rgba(245,243,237,0.78);
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(245,243,237,0.16);
+  }
+  .ps-col.primary .ps-desc { color: rgba(26,26,26,0.78); border-top-color: rgba(26,26,26,0.2); }
+  .ps-list { list-style: none; margin-top: 12px; display: grid; gap: 8px; }
+  .ps-list li {
+    font-size: 11.5px; line-height: 1.5; color: rgba(245,243,237,0.72);
+    padding-left: 14px; position: relative;
+  }
+  .ps-col.primary .ps-list li { color: rgba(26,26,26,0.82); }
+  .ps-list li::before { content: ""; position: absolute; left: 0; top: 8px; width: 8px; height: 1px; background: var(--gold); }
+  .ps-col.primary .ps-list li::before { background: var(--black); }
+  .ps-list li b { color: var(--ivory); font-weight: 700; }
+  .ps-col.primary .ps-list li b { color: var(--black); }
+
+  .ps-arrow {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 0;
+  }
+  .ps-arrow-date {
+    font-family: var(--display); font-size: 22px; color: var(--gold); line-height: 1;
+    writing-mode: horizontal-tb;
+  }
+  .ps-arrow-line {
+    width: 1px; flex: 1; background: var(--gold); min-height: 30px;
+  }
+  .ps-arrow-mark {
+    font-family: var(--display); font-size: 32px; color: var(--gold); line-height: 1;
+  }
+  .ps-arrow-label {
+    font-family: var(--system); font-size: 9.5px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700;
+  }
+
+  .ownership-note {
+    margin-top: auto; padding-top: 22px;
+    display: grid; grid-template-columns: 140px 1fr; gap: 22px; align-items: baseline;
+    border-top: 1px solid rgba(245,243,237,0.16);
+  }
+  .own-tag {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700;
+  }
+  .own-text {
+    font-family: var(--display); font-size: 24px; color: var(--ivory); line-height: 1.25;
+    max-width: 44ch;
+  }
+  .own-text em { color: var(--gold); font-style: italic; }
+
+  /* ---------- Website map ---------- */
+  .site-map {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px;
+    margin-top: 22px;
+  }
+  .site-section {
+    display: grid; grid-template-columns: 44px 1fr; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .site-n {
+    font-family: var(--display); font-size: 22px; color: var(--gold); line-height: 1;
+  }
+  .site-name {
+    font-family: var(--system); font-weight: 700; font-size: 13px; letter-spacing: 0.06em;
+    color: var(--ink); text-transform: uppercase;
+  }
+  .site-desc {
+    font-size: 11.5px; line-height: 1.5; color: var(--ink-soft); margin-top: 4px;
+  }
+  .site-footer {
+    margin-top: 22px; background: var(--black); color: var(--ivory); padding: 18px 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+  }
+  .site-foot-row { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: baseline; }
+  .site-foot-l {
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700;
+  }
+  .site-foot-r {
+    font-family: var(--display); font-size: 18px; color: var(--ivory); line-height: 1.2;
+  }
+  .site-foot-r b { color: var(--gold); font-weight: 400; }
+
+  /* ---------- Contents parts + continuation ---------- */
+  .part-row {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 14px;
+    align-items: center;
+    padding: 14px 0 6px;
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+    font-weight: 700;
+    color: var(--gold-matte);
+  }
+  .part-row i {
+    display: block; height: 1px; background: var(--gold);
+  }
+  .part-row span:last-child { color: var(--ink-soft); font-weight: 500; }
+  .toc-cont {
+    margin-top: 18px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 14px;
+    font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600;
+  }
+  .toc-arrow {
+    font-family: var(--display); font-size: 28px; color: var(--gold); cursor: pointer;
+    line-height: 1;
+    transition: transform 200ms var(--ease);
+  }
+  .toc-arrow:hover { transform: translateX(4px); }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    display: flex; align-items: center; justify-content: center; gap: 18px;
+  }
+  .ctrl {
+    appearance: none; border: 1px solid rgba(245,243,237,0.25);
+    background: transparent;
+    color: var(--ivory);
+    width: 46px; height: 46px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: border-color 200ms var(--ease), background 200ms var(--ease), color 200ms var(--ease);
+  }
+  .ctrl:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .ctrl:disabled { opacity: 0.3; cursor: default; }
+  .ctrl svg { width: 18px; height: 18px; }
+
+  .dots {
+    display: flex; gap: 6px; padding: 0 14px;
+  }
+  .dot {
+    appearance: none; border: 0; padding: 0;
+    width: 28px; height: 4px;
+    background: rgba(245,243,237,0.18);
+    cursor: pointer;
+    transition: background 200ms var(--ease), height 200ms var(--ease);
+  }
+  .dot:hover { background: rgba(245,243,237,0.36); }
+  .dot.active { background: var(--gold); height: 6px; }
+
+  .hint {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(245,243,237,0.35); font-weight: 500;
+  }
+
+  /* ---------- Responsive scale ---------- */
+  @media (max-width: 1100px), (max-height: 880px) {
+    .stage { padding: 16px 18px; }
+  }
+
+  /* ---------- Tracker page styles ---------- */
+  .tracker-task {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 9px;
+    align-items: start;
+    cursor: pointer;
+    padding: 3px 0;
+    margin-bottom: 2px;
+    border-bottom: 1px solid rgba(245,243,237,0.07);
+    user-select: none;
+  }
+  .tracker-task:last-child { border-bottom: 0; }
+  .tracker-box {
+    width: 14px; height: 14px;
+    border: 1.5px solid rgba(245,243,237,0.35);
+    display: inline-block;
+    flex-shrink: 0;
+    position: relative;
+    margin-top: 2px;
+    transition: background 180ms ease, border-color 180ms ease;
+  }
+  .tracker-task.is-done .tracker-box {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .tracker-task.is-done .tracker-box::after {
+    content: "";
+    position: absolute;
+    left: 2px; top: -1px;
+    width: 4px; height: 8px;
+    border: solid var(--black);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .tracker-label {
+    font-family: var(--system);
+    font-size: 10.5px;
+    line-height: 1.45;
+    color: rgba(245,243,237,0.72);
+    transition: color 180ms ease;
+  }
+  .tracker-task.is-done .tracker-label {
+    color: rgba(245,243,237,0.38);
+    text-decoration: line-through;
+    text-decoration-color: rgba(245,243,237,0.25);
+  }
+
+  /* Metric counters */
+  .metric-counter {
+    background: rgba(245,243,237,0.05);
+    border: 1px solid rgba(212,175,55,0.22);
+    padding: 8px 10px;
+  }
+  .metric-label {
+    font-family: var(--system);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(245,243,237,0.5);
+    margin-bottom: 6px;
+  }
+  .metric-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .metric-btn {
+    appearance: none;
+    border: 1px solid rgba(212,175,55,0.45);
+    background: transparent;
+    color: var(--gold);
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    font-family: var(--system);
+    font-weight: 400;
+    transition: background 150ms ease, color 150ms ease;
+  }
+  .metric-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+  .metric-val {
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--ivory);
+    min-width: 32px;
+    text-align: center;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#1A1A1A">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#1A1A1A"/>
+    <rect x="56" y="56" width="1088" height="688" fill="none" stroke="#D4AF37" stroke-width="2" stroke-opacity="0.45"/>
+    <line x1="555" y1="56" x2="645" y2="56" stroke="#D4AF37" stroke-width="3"/>
+    <line x1="555" y1="744" x2="645" y2="744" stroke="#D4AF37" stroke-width="3"/>
+    <rect x="565" y="180" width="70" height="70" fill="none" stroke="#D4AF37" stroke-width="2"/>
+    <text x="600" y="232" font-family="Georgia, 'Times New Roman', serif" font-size="42" fill="#D4AF37" text-anchor="middle">A</text>
+    <rect x="450" y="340" width="300" height="28" fill="#F5F3ED"/>
+    <rect x="380" y="384" width="440" height="28" fill="#F5F3ED"/>
+    <rect x="500" y="428" width="200" height="28" fill="#D4AF37"/>
+    <text x="600" y="610" font-family="Georgia, serif" font-size="14" fill="#D4AF37" text-anchor="middle" letter-spacing="4">THE AUTONOMY PATH</text>
+  </svg>
+</template>
+<div class="stage">
+
+  <header class="header">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>No Gra Gra · The Autonomy Code™</span>
+      <span class="sub">Mid-Year Diagnostic · Olu Sowunmi · May 2026</span>
+    </div>
+    <div class="progress">
+      <div class="counter">Page <b><span id="cur">1</span></b> of <b id="total">12</b></div>
+      <div class="progress-bar"><div class="fill" id="fill"></div></div>
+    </div>
+  </header>
+
+  <div class="book-wrap">
+    <div class="book" id="book">
+
+      <!-- ============ PAGE 1 · COVER ============ -->
+      <article class="page page--dark cover is-current" data-idx="0">
+        <div class="frame"></div>
+        <div class="cover-inner">
+          <div class="cover-top">
+            <div>Confidential · For Olu Sowunmi</div>
+            <div class="cover-mark">A</div>
+          </div>
+
+          <div class="cover-center">
+            <div class="cover-kicker">A Path From Scrambling to Reclaiming</div>
+            <h1>The<br/>Autonomy<br/><span class="amp">Path</span></h1>
+            <p class="cover-sub">A mid-year diagnostic and practice build — built from seven calls, four months, and one clear question: where are you actually operating, and what needs to strengthen to move?</p>
+          </div>
+
+          <div class="cover-bottom">
+            <div class="meta">
+              Prepared by<br/>
+              <b>DK Jonah</b>
+            </div>
+            <div class="center">·</div>
+            <div class="meta right">
+              Issued<br/>
+              <b>23 May 2026</b>
+            </div>
+          </div>
+        </div>
+        <div class="hint">Click pages or use arrows · ← →</div>
+      </article>
+
+      <!-- ============ PAGE 02 · CONTENTS I ============ -->
+      <article class="page" data-idx="1">
+        <div class="page-inner">
+          <div class="eyebrow">The Contents · I of II</div>
+          <h2 class="section">What's inside.</h2>
+          <hr class="gold-rule" />
+          <p class="body" style="margin-bottom: 4px; font-size: 13px;">Five parts — diagnosis, presence, speaking, revenue, execution — held together by one question: are you ready to move from Level 1 to Level 3?</p>
+
+          <div class="toc-list">
+            <div class="part-row"><span>Part One</span><i></i><span>The Diagnosis</span></div>
+            <div class="toc-row" data-go="3"><div class="n">01</div><div class="t">The Foundation<small>What this report shows you</small></div><div class="p">Pg 04</div></div>
+            <div class="toc-row" data-go="4"><div class="n">02</div><div class="t">Where You Are<small>Sync Check · Level 0 — 1</small></div><div class="p">Pg 05</div></div>
+            <div class="toc-row" data-go="5"><div class="n">03</div><div class="t">Independence vs. Autonomy<small>The system that's running</small></div><div class="p">Pg 06</div></div>
+            <div class="toc-row" data-go="6"><div class="n">04</div><div class="t">Where You Can Move<small>One coherent system, three vectors</small></div><div class="p">Pg 07</div></div>
+            <div class="toc-row" data-go="7"><div class="n">05</div><div class="t">The Five Pillars<small>What needs to strengthen</small></div><div class="p">Pg 08</div></div>
+
+            <div class="part-row"><span>Part Two</span><i></i><span>Public Presence</span></div>
+            <div class="toc-row" data-go="8"><div class="n">06</div><div class="t">Three Audiences<small>Customers · clients · coachees</small></div><div class="p">Pg 09</div></div>
+            <div class="toc-row" data-go="9"><div class="n">07</div><div class="t">Online Presence · The Platforms<small>The four-platform architecture</small></div><div class="p">Pg 10</div></div>
+            <div class="toc-row" data-go="10"><div class="n">08</div><div class="t">Online Presence · The Flow<small>How the four move together</small></div><div class="p">Pg 11</div></div>
+            <div class="toc-row" data-go="11"><div class="n">09</div><div class="t">LinkedIn, Up Close<small>Profile vs. Newsletter · why both</small></div><div class="p">Pg 12</div></div>
+            <div class="toc-row" data-go="12"><div class="n">10</div><div class="t">Name the Letter<small>Six directions · you write it</small></div><div class="p">Pg 13</div></div>
+          </div>
+
+          <div class="toc-cont">
+            <span>Continued on the next page</span>
+            <span class="toc-arrow" data-go="2">→</span>
+          </div>
+        </div>
+        <div class="folio" style="right: 56px; bottom: 56px; font-size: 240px;">II</div>
+        <div class="page-meta"><span>The Autonomy Path · Contents I</span><span class="rule"></span><span class="num">02</span></div>
+      </article>
+
+      <!-- ============ PAGE 03 · CONTENTS II ============ -->
+      <article class="page" data-idx="2">
+        <div class="page-inner">
+          <div class="eyebrow">The Contents · II of II</div>
+          <h2 class="section">… continued.</h2>
+          <hr class="gold-rule" />
+          <p class="body" style="margin-bottom: 4px; font-size: 13px;">Part Two continues into the move from public to owned ground. Parts Three, Four, and Five turn the platform into revenue, the practice into rhythm.</p>
+
+          <div class="toc-list">
+            <div class="part-row"><span>Part Two</span><i></i><span>Public Presence · cont.</span></div>
+            <div class="toc-row" data-go="13"><div class="n">11</div><div class="t">Online Presence · The Voice<small>Five content types in rotation</small></div><div class="p">Pg 14</div></div>
+            <div class="toc-row" data-go="14"><div class="n">12</div><div class="t">Online Presence · The Rhythm<small>Three phases · weekly cadence</small></div><div class="p">Pg 15</div></div>
+            <div class="toc-row" data-go="15"><div class="n">13</div><div class="t">The Phase Shift<small>LinkedIn → Website · September 1</small></div><div class="p">Pg 16</div></div>
+            <div class="toc-row" data-go="16"><div class="n">14</div><div class="t">The Website<small>What the owned ground carries</small></div><div class="p">Pg 17</div></div>
+            <div class="toc-row" data-go="17"><div class="n">15</div><div class="t">The Private Letter<small>Exclusive newsletter · September 2026</small></div><div class="p">Pg 18</div></div>
+
+            <div class="part-row"><span>Part Three</span><i></i><span>Speaking</span></div>
+            <div class="toc-row" data-go="18"><div class="n">16</div><div class="t">Speaking Roadmap<small>From invisible to invited</small></div><div class="p">Pg 19</div></div>
+
+            <div class="part-row"><span>Part Four</span><i></i><span>Revenue</span></div>
+            <div class="toc-row" data-go="19"><div class="n">17</div><div class="t">Your Revenue Model<small>Four streams · how you actually make money</small></div><div class="p">Pg 20</div></div>
+
+            <div class="part-row"><span>Part Five</span><i></i><span>Execution</span></div>
+            <div class="toc-row" data-go="20"><div class="n">18</div><div class="t">90-Day Execution<small>May 25 → August 31</small></div><div class="p">Pg 21</div></div>
+            <div class="toc-row" data-go="21"><div class="n">19</div><div class="t">The Choice<small>Two futures, one decision</small></div><div class="p">Pg 22</div></div>
+
+            <div class="part-row"><span>The Tracker</span><i></i><span>Your Progress</span></div>
+            <div class="toc-row" data-go="22"><div class="n">20</div><div class="t">Your Progress · 90-Day Tracker<small>Interactive milestone checklist &amp; key metrics</small></div><div class="p">Pg 23</div></div>
+          </div>
+        </div>
+        <div class="folio" style="right: 56px; bottom: 56px; font-size: 240px;">III</div>
+        <div class="page-meta"><span>The Autonomy Path · Contents II</span><span class="rule"></span><span class="num">03</span></div>
+      </article>
+
+      <!-- ============ PAGE 3 · THE FOUNDATION ============ -->
+      <article class="page page--dark" data-idx="3">
+        <div class="page-inner">
+          <div class="eyebrow">Chapter One · The Foundation</div>
+          <h1 class="display" style="color: var(--ivory); margin-top: 16px;">This is not<br/>judgment.<br/><em style="color: var(--gold); font-style: normal;">This is architecture.</em></h1>
+          <hr class="gold-rule" />
+          <div class="two-col" style="margin-top: 18px;">
+            <div>
+              <h3 class="sub">What this shows</h3>
+              <ul class="dash" style="margin-top: 10px;">
+                <li style="color: rgba(245,243,237,0.78);"><b style="color: var(--ivory);">Where you are —</b> your current operating level on the Sync Check Pyramid.</li>
+                <li style="color: rgba(245,243,237,0.78);"><b style="color: var(--ivory);">What's creating it —</b> the system that's running underneath the motion.</li>
+                <li style="color: rgba(245,243,237,0.78);"><b style="color: var(--ivory);">Where you can move —</b> what Level 3 actually looks like for your work.</li>
+                <li style="color: rgba(245,243,237,0.78);"><b style="color: var(--ivory);">What needs to strengthen —</b> the five pillars of the Autonomy Code.</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="sub">What's real</h3>
+              <p class="body" style="margin-top: 10px;">Your <b style="color: var(--ivory);">vision is coherent.</b> Every venture you've built — 3PN, REDtech, LEGUp, RACK — solves one problem: making capable people visible to the systems that recognise them.</p>
+              <p class="body" style="margin-top: 12px;">Your <b style="color: var(--ivory);">capability is real.</b> You can see opportunity. You can decide. You can move things. People take your calls.</p>
+              <p class="body" style="margin-top: 12px;">Your <b style="color: var(--ivory);">awareness is here.</b> You asked for this. You're willing to look. Most people don't.</p>
+            </div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 36px; border-top: 1px solid rgba(245,243,237,0.16);">
+            <p class="pull" style="color: var(--ivory); max-width: 32ch;">You're not starting from zero. You're starting from <em>clear vision, real capability, actual access.</em></p>
+          </div>
+        </div>
+        <div class="folio" style="left: 56px; top: 36px; font-size: 220px;">I</div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>Part One · The Foundation</span><span class="rule"></span><span class="num">04</span></div>
+      </article>
+
+      <!-- ============ PAGE 4 · WHERE YOU ARE ============ -->
+      <article class="page" data-idx="4">
+        <div class="page-inner">
+          <div class="eyebrow">Sync Check · Where you are</div>
+          <h2 class="section">Level 0 → 1.<br/>Scrambling, transitioning to Managing.</h2>
+          <hr class="gold-rule" />
+
+          <div class="pyramid-wrap">
+            <div class="pyramid">
+              <div class="row r5"><span class="badge">5</span>The Autonomous One</div>
+              <div class="row r3"><span class="badge">3</span>Reclaiming
+                <div class="marker target">Where you can move</div>
+              </div>
+              <div class="row line"><span>↑ Above the Line · Intentional, Self-Directed</span></div>
+              <div class="row r1"><span class="badge">1</span>Managing
+                <div class="marker you-r1">You · also here</div>
+              </div>
+              <div class="row r0"><span class="badge">0</span>Scrambling
+                <div class="marker you-r0">You · primarily here</div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="sub">The evidence</h3>
+              <ul class="dash" style="margin-top: 10px;">
+                <li><b>Scrambling.</b> 3PN, REDtech, Personal Brand, Nigeria Expansion, Infrastructure — all running at once. Decisions scatter; others consolidate; new opportunity surfaces before existing work finishes.</li>
+                <li><b>Managing.</b> You can name what's missing — "a master list," "consolidate the folder," "clarity on structure." Follow-through is partial. You move before things finish.</li>
+                <li><b>Not yet Reclaiming.</b> No protected depth, no resourced priority, no rhythm holding it together.</li>
+              </ul>
+
+              <hr class="thin-rule" />
+              <p class="pull" style="font-size: 28px;">Your system is built for <em>independence.</em><br/>Your vision requires <em>autonomy.</em></p>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part One · Sync Check Level</span><span class="rule"></span><span class="num">05</span></div>
+      </article>
+
+      <!-- ============ PAGE 5 · INDEPENDENCE vs AUTONOMY ============ -->
+      <article class="page" data-idx="5">
+        <div class="page-inner">
+          <div class="eyebrow">The Distinction</div>
+          <h2 class="section">Independence<br/>is not autonomy.</h2>
+          <hr class="gold-rule" />
+          <p class="lead" style="margin-bottom: 8px;">They feel the same from the inside. They aren't. Independence is freedom <em style="color:var(--gold-matte); font-style: normal;">from</em> constraint. Autonomy is freedom <em style="color:var(--gold-matte); font-style: normal;">to</em> — to decide, allocate, speak truth, build on your own terms.</p>
+
+          <div class="compare">
+            <div class="row"><div class="lbl-l">I can do whatever I want</div><div class="vs">vs.</div><div class="lbl-r">I own what I commit to</div></div>
+            <div class="row"><div class="lbl-l">Freedom from constraint</div><div class="vs">vs.</div><div class="lbl-r">Freedom through structure</div></div>
+            <div class="row"><div class="lbl-l">Motion and possibility</div><div class="vs">vs.</div><div class="lbl-r">Depth and delivery</div></div>
+            <div class="row"><div class="lbl-l">Appearing in many rooms</div><div class="vs">vs.</div><div class="lbl-r">Building in one direction</div></div>
+            <div class="row"><div class="lbl-l">Real-time reactivity</div><div class="vs">vs.</div><div class="lbl-r">Planned sequencing</div></div>
+            <div class="row"><div class="lbl-l">Saying yes to every opening</div><div class="vs">vs.</div><div class="lbl-r">Choosing what serves the priority</div></div>
+            <div class="row"><div class="lbl-l">Scattered presence</div><div class="vs">vs.</div><div class="lbl-r">Rhythmic, consistent presence</div></div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 24px;">
+            <h3 class="sub">What the Level 0 — 1 system optimises for</h3>
+            <p class="body" style="margin-top: 10px;">Opportunity capture. Visibility. Speed. Expansion. It produces real wins — many initiatives running, quick decisions, access to rooms, the appearance of motion. And it creates predictable constraints in return: nothing finishes at the level of mastery, authority cannot consolidate, the vision scatters before it can be seen, and depth keeps getting traded for breadth.</p>
+            <p class="body" style="margin-top: 8px;">This is not character. It is a system. The shift required for Level 3 is structural, not personal.</p>
+          </div>
+        </div>
+        <div class="folio" style="right: 56px; top: 36px; font-size: 220px;">IV</div>
+        <div class="page-meta"><span>Part One · The Distinction</span><span class="rule"></span><span class="num">06</span></div>
+      </article>
+
+      <!-- ============ PAGE 6 · WHERE YOU CAN MOVE ============ -->
+      <article class="page" data-idx="6">
+        <div class="page-inner">
+          <div class="eyebrow">Level Three · Where you can move</div>
+          <h2 class="section">One system.<br/>Three integrated vectors.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Right now you're building 3PN <em>and</em> REDtech <em>and</em> a personal brand <em>and</em> Nigeria expansion — in parallel, in isolation. At Level 3 (Reclaiming), they stop being separate ventures. They become one architecture with one message holding it together.</p>
+
+          <div class="stack">
+            <div class="layer">
+              <div class="ord">01</div>
+              <h4>Network Layer · <b>3PN</b></h4>
+              <p>Where capable people connect. The professional infrastructure beneath access — community calls, monthly strategy sessions, the room where recognition begins.</p>
+            </div>
+            <div class="layer center">
+              <div class="ord">★</div>
+              <h4>Your Core System · <b>Make capable people visible to recognition</b></h4>
+              <p>The single message that consolidates everything. Said the same way in every room, on every platform, by every venture. This is the priority that everything else serves.</p>
+            </div>
+            <div class="layer">
+              <div class="ord">02</div>
+              <h4>Verification Layer · <b>REDtech</b></h4>
+              <p>How capabilities get recognised and verified. Proof over promises. The Verifiable Talent Standard™ in production — the case study that proves the thinking.</p>
+            </div>
+            <div class="layer">
+              <div class="ord">03</div>
+              <h4>Authority Layer · <b>Your Practice</b></h4>
+              <p>You as the trusted guide in this ecosystem. The newsletter, the stage, the consulting, the coaching — all of it expressing one philosophy, building one reputation.</p>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part One · The Shift</span><span class="rule"></span><span class="num">07</span></div>
+      </article>
+
+      <!-- ============ PAGE 7 · FIVE PILLARS ============ -->
+      <article class="page page--dark" data-idx="7">
+        <div class="page-inner">
+          <div class="eyebrow">The Autonomy Code · The Five Pillars</div>
+          <h2 class="section" style="color: var(--ivory);">What needs<br/>to strengthen.</h2>
+          <hr class="gold-rule" />
+          <p class="body" style="margin-top: -6px; color: rgba(245,243,237,0.78);">Five structural supports hold Level 3. Right now, four are scattered and one is performed. Each is a room you walk into, not a category to optimise.</p>
+
+          <div class="pillar-grid">
+            <div class="pillar">
+              <div class="n">01</div>
+              <h4 style="color:var(--ivory);">Resources</h4>
+              <div class="ask" style="color: rgba(245,243,237,0.65);">"What are you leaking?"</div>
+              <div class="state" style="color: rgba(245,243,237,0.45);">Current<b style="color:var(--ivory);">Scattered</b></div>
+              <div class="shift" style="color: rgba(245,243,237,0.82); border-color: rgba(245,243,237,0.16);">Own your capacity. Don't ask others to solve it. Deploy what's given.</div>
+            </div>
+            <div class="pillar">
+              <div class="n">02</div>
+              <h4 style="color:var(--ivory);">Message</h4>
+              <div class="ask" style="color: rgba(245,243,237,0.65);">"What can't you express clearly?"</div>
+              <div class="state" style="color: rgba(245,243,237,0.45);">Current<b style="color:var(--ivory);">Scattered</b></div>
+              <div class="shift" style="color: rgba(245,243,237,0.82); border-color: rgba(245,243,237,0.16);">One clear message. Said the same way in every room.</div>
+            </div>
+            <div class="pillar">
+              <div class="n">03</div>
+              <h4 style="color:var(--ivory);">Relationships</h4>
+              <div class="ask" style="color: rgba(245,243,237,0.65);">"Who is shaping your growth?"</div>
+              <div class="state" style="color: rgba(245,243,237,0.45);">Current<b style="color:var(--ivory);">Non-reciprocal</b></div>
+              <div class="shift" style="color: rgba(245,243,237,0.82); border-color: rgba(245,243,237,0.16);">Honour the time others give you. Reciprocate. Follow through.</div>
+            </div>
+            <div class="pillar">
+              <div class="n">04</div>
+              <h4 style="color:var(--ivory);">Strategy</h4>
+              <div class="ask" style="color: rgba(245,243,237,0.65);">"How do you move idea to action?"</div>
+              <div class="state" style="color: rgba(245,243,237,0.45);">Current<b style="color:var(--ivory);">Scattered</b></div>
+              <div class="shift" style="color: rgba(245,243,237,0.82); border-color: rgba(245,243,237,0.16);">One priority. Sequence, don't parallel. Finish before you start.</div>
+            </div>
+            <div class="pillar">
+              <div class="n">05</div>
+              <h4 style="color:var(--ivory);">Identity</h4>
+              <div class="ask" style="color: rgba(245,243,237,0.65);">"Who are you being while you build?"</div>
+              <div class="state" style="color: rgba(245,243,237,0.45);">Current<b style="color:var(--ivory);">Performed</b></div>
+              <div class="shift" style="color: rgba(245,243,237,0.82); border-color: rgba(245,243,237,0.16);">Own the role, don't perform it. Stay present through difficulty.</div>
+            </div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid rgba(245,243,237,0.16);">
+            <p class="pull" style="color: var(--ivory); max-width: 38ch;">You can't run Level 3 infrastructure from a Level 0–1 <em>operating system.</em></p>
+          </div>
+        </div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>Part One · The Five Pillars</span><span class="rule"></span><span class="num">08</span></div>
+      </article>
+
+      <!-- ============ PAGE 09 · THREE AUDIENCES ============ -->
+      <article class="page" data-idx="8">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · Who you serve</div>
+          <h2 class="section">Three audiences.<br/>One voice.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Your public presence speaks to three distinct rooms at once — customers, clients, and one-to-one coachees. The voice doesn't change. The thing they're listening for does. Knowing the difference makes the same essay land three ways.</p>
+
+          <div class="audiences">
+            <div class="aud-card">
+              <div class="aud-num">01</div>
+              <div class="aud-label">Customers</div>
+              <div class="aud-need">Need the frameworks · want the problem solved</div>
+              <p class="aud-desc">People and organisations who recognise the gap but can't close it themselves. A manager who sees talent but can't verify it. A company with hiring gaps and no diagnosis. An emerging-market leader sitting on capability they can't operationalise.</p>
+              <div class="aud-listen">
+                <div class="aud-l-tag">Listening for</div>
+                <div class="aud-l-text">“How do you solve this? Will this actually work?”</div>
+              </div>
+            </div>
+            <div class="aud-card">
+              <div class="aud-num">02</div>
+              <div class="aud-label">Clients</div>
+              <div class="aud-need">Invest in a person · want trust over time</div>
+              <p class="aud-desc">Institutional leaders looking for credible, trustworthy people of character — partners who can help them build sustainably and pass the work on. A bank redesigning hiring for the future. An institution that needs infrastructure thinking, not a hiring fix. A sector leader building a talent pipeline with integrity.</p>
+              <div class="aud-listen">
+                <div class="aud-l-tag">Listening for</div>
+                <div class="aud-l-text">“Who is this? Do I trust them? Can they hold this work with integrity?”</div>
+              </div>
+            </div>
+            <div class="aud-card">
+              <div class="aud-num">03</div>
+              <div class="aud-label">Coachees</div>
+              <div class="aud-need">Pay for your thinking + presence · applied to their context</div>
+              <p class="aud-desc">Individual managers, founders, and leaders who want the frameworks applied to their specific situation. The manager learning to assess capability in their team. The leader thinking through infrastructure strategy. The founder who wants the system from the start.</p>
+              <div class="aud-listen">
+                <div class="aud-l-tag">Listening for</div>
+                <div class="aud-l-text">“Can he help me think through this? Is he credible? Can I work with him directly?”</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="positioning">
+            <div class="positioning-tag">The one public positioning that holds for all three</div>
+            <p class="positioning-quote">“I design and lead systems that move talent from learning into <em>real work, evidence, and sustainable growth.</em>”</p>
+            <div class="positioning-checks">
+              <span>Names the problem</span>
+              <span>Names the approach</span>
+              <span>Shows the outcome</span>
+              <span>Implies the character</span>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · Three Audiences</span><span class="rule"></span><span class="num">09</span></div>
+      </article>
+
+      <!-- ============ PAGE 10 · ONLINE PRESENCE · PLATFORMS ============ -->
+      <article class="page" data-idx="9">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · Online Presence</div>
+          <h2 class="section">From behind the scenes<br/>to visible authority.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">You have access, thinking, capability, and vision. What you don't have is public proof. Four platforms — not separate channels, but one architecture — close that gap.</p>
+
+          <div class="platforms">
+            <div class="platform primary">
+              <div class="num">01</div>
+              <div>
+                <h4>LinkedIn Newsletter <span class="role">The primary visibility engine · 400–800 words · 3× per week</span></h4>
+                <p>Where your thinking moves from private to public. Organised, searchable, building an owned audience. Five content types in rotation: System Breakdown · Framework Explainer · Real Work Story · Conviction · Quick Insight.</p>
+                <div class="freq">Launch · June 1</div>
+              </div>
+              <div style="border-left: 1px solid rgba(245,243,237,0.22); padding-left: 22px;">
+                <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(245,243,237,0.55); font-weight: 600;">Your message</div>
+                <p style="margin-top: 8px; font-size: 13px; line-height: 1.5; color: var(--ivory);">"I design systems that move talent from learning into real work, evidence, and sustainable growth."</p>
+              </div>
+            </div>
+
+            <div class="platform">
+              <div class="num">02</div>
+              <h4>Website <span class="role">The deep-dive destination</span></h4>
+              <p>Credibility anchor: story, frameworks, case studies, speaking topics, booking. Refresh by July 31. Owned newsletter list builds here — separate from LinkedIn, on your terms.</p>
+              <div class="freq">Refresh · July 31</div>
+            </div>
+
+            <div class="platform">
+              <div class="num">03</div>
+              <h4>Instagram <span class="role">Short form · repurposed</span></h4>
+              <p>Carousels of key insights, quote graphics, behind-the-scenes. 3–4 posts per week, mostly drawn from LinkedIn. Drives curiosity back to the newsletter.</p>
+              <div class="freq">Active · Week 3 of June</div>
+            </div>
+
+            <div class="platform">
+              <div class="num">04</div>
+              <h4>TikTok <span class="role">Short video · talking head</span></h4>
+              <p>60–90 second explainers, one insight per video. Algorithm favours depth-of-thinking creators. 2–3 videos per week. Younger audience, growing speaking inbound.</p>
+              <div class="freq">Begin · July</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 22px; display: flex; align-items: center; justify-content: flex-end; gap: 14px; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600;">
+            <span>Continues · the flow, the voice, the rhythm</span>
+            <span style="font-family: var(--display); font-size: 22px; color: var(--gold); letter-spacing: 0;">→</span>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · Online Presence</span><span class="rule"></span><span class="num">10</span></div>
+      </article>
+
+      <!-- ============ PAGE 9 · THE FLOW ============ -->
+      <article class="page" data-idx="10">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Architecture</div>
+          <h2 class="section">How the four<br/>move together.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Not four platforms. <em style="color: var(--gold-matte); font-style: normal;">One funnel.</em> Each layer feeds the next; each piece of public thinking earns its place by either deepening trust or pulling new readers in.</p>
+
+          <div class="flow" style="margin-top: 28px;">
+            <div class="flow-node origin">
+              <div class="flow-tag">Source</div>
+              <div class="flow-title">You</div>
+              <div class="flow-sub">15+ years · JPMorgan, emerging markets, multiple sectors. Frameworks already built.</div>
+            </div>
+            <div class="flow-line"></div>
+            <div class="flow-node primary">
+              <div class="flow-tag" style="color: var(--gold);">Primary platform · Long form</div>
+              <div class="flow-title">LinkedIn Newsletter</div>
+              <div class="flow-sub">3× per week · 400–800 words. Where your thinking moves from private to public. The body of work that proves the practice.</div>
+            </div>
+            <div class="flow-line"></div>
+            <div class="flow-branches">
+              <div class="flow-branch">
+                <div class="flow-tag">Front door</div>
+                <div class="flow-title-sm">LinkedIn Profile</div>
+                <div class="flow-sub">First place a name gets searched. Headshot, headline, About, Featured — all pointing to the newsletter.</div>
+              </div>
+              <div class="flow-branch">
+                <div class="flow-tag">Deep dive</div>
+                <div class="flow-title-sm">Website</div>
+                <div class="flow-sub">Credibility anchor. Story, frameworks, case studies, speaking. Owned email list builds here.</div>
+              </div>
+              <div class="flow-branch">
+                <div class="flow-tag">Short form</div>
+                <div class="flow-title-sm">Instagram + TikTok</div>
+                <div class="flow-sub">Repurposed only. One newsletter → one carousel + one short video. Drives curiosity back to long form.</div>
+              </div>
+            </div>
+            <div class="flow-line"></div>
+            <div class="flow-node">
+              <div class="flow-tag">Outcome</div>
+              <div class="flow-title">Audience → Invitations → Revenue</div>
+              <div class="flow-sub">Customers, clients, and coaches recognise you. Speaking invitations arrive. Consulting and coaching inquiries follow. Monetisation becomes structural, not opportunistic.</div>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · The Architecture</span><span class="rule"></span><span class="num">11</span></div>
+      </article>
+
+      <!-- ============ PAGE 10 · PROFILE vs NEWSLETTER ============ -->
+      <article class="page" data-idx="11">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · LinkedIn, Up Close</div>
+          <h2 class="section">Two LinkedIns.<br/>One purpose.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Your profile and your newsletter do different work. The profile is the front door. The newsletter is the room you walk people into. You need both — and they are not interchangeable.</p>
+
+          <div class="li-compare">
+            <div class="li-col">
+              <div class="li-role">The front door</div>
+              <h3 class="li-name">LinkedIn Profile</h3>
+              <div class="li-meta">Updated quarterly · Static identity</div>
+              <div class="li-fn">Identity + credibility</div>
+              <ul class="li-bullets">
+                <li><b>Says.</b> I exist. Here is what I do. Here is what you can verify.</li>
+                <li><b>Carries.</b> Headshot, headline, About, Featured, Experience, Recommendations.</li>
+                <li><b>Reader thought.</b> “Is this person who they say they are?”</li>
+                <li><b>Outcome.</b> Pass the credibility test in thirty seconds.</li>
+              </ul>
+            </div>
+            <div class="li-divider"></div>
+            <div class="li-col">
+              <div class="li-role gold">The room you walk them into</div>
+              <h3 class="li-name">LinkedIn Newsletter</h3>
+              <div class="li-meta">Published 3× weekly · Living body of work</div>
+              <div class="li-fn gold">Voice + accumulating evidence</div>
+              <ul class="li-bullets">
+                <li><b>Shows.</b> How you think. What you stand for. What you've seen.</li>
+                <li><b>Carries.</b> Long-form essays, subscribers, archive, signature voice.</li>
+                <li><b>Reader thought.</b> “Do I want to keep reading what they write?”</li>
+                <li><b>Outcome.</b> Earn the subscribe. Build the owned audience.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="li-footer">
+            <div class="li-stat"><div class="li-stat-l">Profile</div><div class="li-stat-r">asks people to trust.</div></div>
+            <div class="li-stat"><div class="li-stat-l">Newsletter</div><div class="li-stat-r">earns it.</div></div>
+            <div class="li-stat"><div class="li-stat-l">Profile</div><div class="li-stat-r">is identity.</div></div>
+            <div class="li-stat"><div class="li-stat-l">Newsletter</div><div class="li-stat-r">is evidence.</div></div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · LinkedIn, Up Close</span><span class="rule"></span><span class="num">12</span></div>
+      </article>
+
+      <!-- ============ PAGE 11 · NAME THE LETTER ============ -->
+      <article class="page page--dark" data-idx="12">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Naming</div>
+          <h2 class="section" style="color: var(--ivory);">Name the Letter.</h2>
+          <hr class="gold-rule" />
+          <p class="lead" style="color: var(--ivory); max-width: 64ch;">Six directions, drawn from your own work — your essence, your frameworks, your governing thesis. Each is a working name. The one that lands is the one you can say in a sentence without flinching.</p>
+
+          <div class="names">
+            <div class="name-card">
+              <div class="name-num">01</div>
+              <div class="name-title">Proof Over Promises</div>
+              <div class="name-source">From your essence statement</div>
+              <p class="name-rationale">“I choose integrity over shortcuts and proof over promises.” The strongest declarative claim you've already written. Reads as both a manifesto and a publication name.</p>
+            </div>
+            <div class="name-card">
+              <div class="name-num">02</div>
+              <div class="name-title">The Last Mile</div>
+              <div class="name-source">From your Last Mile Engine</div>
+              <p class="name-rationale">Already your intellectual property. Names the gap your work closes — between learning and real performance. Specific, memorable, sector-agnostic.</p>
+            </div>
+            <div class="name-card">
+              <div class="name-num">03</div>
+              <div class="name-title">The Standard</div>
+              <div class="name-source">From Verifiable Talent Standard™</div>
+              <p class="name-rationale">Authoritative, short, evergreen. Implies a measure people can apply. Pairs cleanly with sector briefs: “The Standard, in banking…”</p>
+            </div>
+            <div class="name-card">
+              <div class="name-num">04</div>
+              <div class="name-title">Made Visible</div>
+              <div class="name-source">From your governing thesis</div>
+              <p class="name-rationale">“Make capable people visible to the systems that recognise them.” Active voice, hopeful tone. Works for talent leaders and the practitioners they want to find.</p>
+            </div>
+            <div class="name-card">
+              <div class="name-num">05</div>
+              <div class="name-title">Real Work</div>
+              <div class="name-source">From your public message</div>
+              <p class="name-rationale">“Systems that move talent into real work, evidence, and sustainable growth.” Plain-spoken. No fluff. Signals the anti-hustle tone of the whole practice.</p>
+            </div>
+            <div class="name-card">
+              <div class="name-num">06</div>
+              <div class="name-title">Capable</div>
+              <div class="name-source">The noun your practice serves</div>
+              <p class="name-rationale">Single word. The thing every reader wants more of — in their team and in themselves. Hard to forget; easy to print on a one-sheet beside your name.</p>
+            </div>
+          </div>
+
+          <div class="write-it">
+            <div class="write-head">
+              <div class="write-tag">A non-negotiable</div>
+              <h3 class="write-title">But — you write it.</h3>
+            </div>
+            <div class="write-grid">
+              <div class="write-reason"><div class="write-n">i.</div><p><b>Only you have your lived experience.</b> Fifteen-plus years across JPMorgan, emerging markets, multiple sectors. That belongs to no one else. It is the only true differentiator.</p></div>
+              <div class="write-reason"><div class="write-n">ii.</div><p><b>Your voice is your proof.</b> People trust you because something about how you think rings true. That has to come directly from you, sentence by sentence.</p></div>
+              <div class="write-reason"><div class="write-n">iii.</div><p><b>Consistency requires ownership.</b> If you don't write it, you won't sustain it. If you do, it becomes part of your weekly rhythm — the way you think out loud.</p></div>
+              <div class="write-reason"><div class="write-n">iv.</div><p><b>Outsourcing breaks trust.</b> If readers ever sense the voice isn't yours, the credibility you've built begins to erode underneath you. The audience knows.</p></div>
+            </div>
+            <p class="write-rule">Not an AI. Not a ghostwriter. Not a VA. <em>You.</em></p>
+          </div>
+        </div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>Part Two · The Naming</span><span class="rule"></span><span class="num">13</span></div>
+      </article>
+
+      <!-- ============ PAGE 12 · FIVE CONTENT TYPES ============ -->
+      <article class="page" data-idx="13">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Voice</div>
+          <h2 class="section">Five voices,<br/>in rotation.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Same author, different shape. Rotating five content types keeps the newsletter alive, lets every framework breathe, and makes 90 days of consistency sustainable instead of repetitive.</p>
+
+          <div class="types">
+            <div class="type-card">
+              <div class="t-head">
+                <div class="t-num">01</div>
+                <div>
+                  <div class="t-name">System Breakdown</div>
+                  <div class="t-meta">1–2× per month · 500–700 words</div>
+                </div>
+              </div>
+              <p class="t-desc">Name one system in talent or hiring that's broken. Clear problem statement, your vantage point, what needs to change.</p>
+              <div class="t-power"><b>Super power.</b> You see what's broken when others see it as normal.</div>
+              <div class="t-eg">“Why CVs Are Useless Now” · “The Hiring Manager's Blind Spot Nobody Talks About”</div>
+            </div>
+            <div class="type-card">
+              <div class="t-head">
+                <div class="t-num">02</div>
+                <div>
+                  <div class="t-name">Framework Explainer</div>
+                  <div class="t-meta">1× per month · 600–800 words</div>
+                </div>
+              </div>
+              <p class="t-desc">Explain one of your frameworks in plain language. Teaching tone. Step-by-step. Real examples. Easy to apply.</p>
+              <div class="t-power"><b>Super power.</b> You make complex systems understandable.</div>
+              <div class="t-eg">“How to Audit Your Hiring Before You Fix It” · “Verifiable vs. Credentialed”</div>
+            </div>
+            <div class="type-card">
+              <div class="t-head">
+                <div class="t-num">03</div>
+                <div>
+                  <div class="t-name">Real Work Story</div>
+                  <div class="t-meta">1× per month · 500–700 words</div>
+                </div>
+              </div>
+              <p class="t-desc">A true story from your actual work. What happened, what you learned, what changed. Narrative, not narration.</p>
+              <div class="t-power"><b>Super power.</b> Your lived experience becomes the lesson.</div>
+              <div class="t-eg">“What Happened When One Client Paused Hiring” · “The Moment I Realised Our System Was Broken”</div>
+            </div>
+            <div class="type-card">
+              <div class="t-head">
+                <div class="t-num">04</div>
+                <div>
+                  <div class="t-name">Conviction Post</div>
+                  <div class="t-meta">1× per month · 400–600 words</div>
+                </div>
+              </div>
+              <p class="t-desc">State what you believe, clearly, without apology. This is what I stand for. This is non-negotiable.</p>
+              <div class="t-power"><b>Super power.</b> Your character becomes visible.</div>
+              <div class="t-eg">“Financial Stability Enables Vision” · “Integrity Isn't Optional. It's Infrastructure.”</div>
+            </div>
+            <div class="type-card" style="grid-column: 1 / -1;">
+              <div class="t-head">
+                <div class="t-num">05</div>
+                <div>
+                  <div class="t-name">Quick Insight</div>
+                  <div class="t-meta">Fills remaining slots · 300–400 words</div>
+                </div>
+              </div>
+              <p class="t-desc">One insight learned the hard way, distilled. Direct. One point. True. Useful immediately. Your insurance against weeks when an obvious topic doesn't arrive.</p>
+              <div class="t-power"><b>Super power.</b> Distilled wisdom — short enough to read once, true enough to remember.</div>
+              <div class="t-eg">“You can't scale what you don't finish.” · “Access without responsibility is a leak.” · “Systems thinking is a muscle. You build it through use.”</div>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · The Voice</span><span class="rule"></span><span class="num">14</span></div>
+      </article>
+
+      <!-- ============ PAGE 13 · 90 DAY CONTENT RHYTHM ============ -->
+      <article class="page" data-idx="14">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Rhythm</div>
+          <h2 class="section">Three phases.<br/>One rhythm.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Ninety days of consistency. Phase one builds the habit. Phase two extends the reach. Phase three turns visibility into invitations.</p>
+
+          <div class="phases">
+            <div class="phase">
+              <div class="phase-num">01</div>
+              <div class="phase-month">June</div>
+              <div class="phase-name">Foundation</div>
+              <p class="phase-goal">Establish voice, prove consistency to yourself.</p>
+              <ul class="phase-list">
+                <li><b>Wk 1–2.</b> Profile refresh. First three articles published (Jun 1, 3, 5). Welcome post, one System Breakdown, one Framework Explainer.</li>
+                <li><b>Wk 3–4.</b> Continue 3× weekly. Rotate the five types. Watch what lands.</li>
+                <li><b>End of June.</b> 12 articles published. Voice settled. Rhythm holding.</li>
+              </ul>
+            </div>
+            <div class="phase">
+              <div class="phase-num">02</div>
+              <div class="phase-month">July</div>
+              <div class="phase-name">Expansion</div>
+              <p class="phase-goal">Deepen authority. Begin repurposing.</p>
+              <ul class="phase-list">
+                <li><b>Continue.</b> 3× weekly on LinkedIn. Move to 5× if rhythm allows.</li>
+                <li><b>Repurpose.</b> One newsletter → one Instagram carousel + one TikTok short. 30 minutes per article.</li>
+                <li><b>Website.</b> Newsletter archive lives on your site. Email signup live.</li>
+                <li><b>End of July.</b> 24+ articles. Patterns emerge in what readers engage with.</li>
+              </ul>
+            </div>
+            <div class="phase">
+              <div class="phase-num">03</div>
+              <div class="phase-month">August</div>
+              <div class="phase-name">Amplification</div>
+              <p class="phase-goal">Turn visibility into invitations.</p>
+              <ul class="phase-list">
+                <li><b>Maintain rhythm.</b> 3–5× weekly. Don't slow down because it's working.</li>
+                <li><b>Compile.</b> Best-performing pieces → lead magnet for the email list.</li>
+                <li><b>Reach out.</b> Speaking pitches now reference visible body of work.</li>
+                <li><b>End of August.</b> 36+ articles. 500–1,000+ subscribers. Speaking conversations active.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="weekly">
+            <div class="weekly-head">
+              <div class="weekly-tag">The weekly rhythm</div>
+              <div class="weekly-sub">10–20 hours per week, depending on what's active.</div>
+            </div>
+            <div class="weekly-grid">
+              <div class="day"><div class="day-name">Mon</div><div class="day-task">Write Article 1 · plan the week · respond to last week's comments</div><div class="day-time">3.5h</div></div>
+              <div class="day"><div class="day-name">Wed</div><div class="day-task">Publish Article 2 · repurpose to IG carousel + TikTok</div><div class="day-time">2h</div></div>
+              <div class="day"><div class="day-name">Fri</div><div class="day-task">Publish Article 3 · outreach &amp; engagement</div><div class="day-time">2h</div></div>
+              <div class="day flex"><div class="day-name">As&nbsp;needed</div><div class="day-task">Speaking prep · client work · coaching calls · website updates</div><div class="day-time">5–10h</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · The Rhythm</span><span class="rule"></span><span class="num">15</span></div>
+      </article>
+
+      <!-- ============ PAGE 16 · PHASE SHIFT ============ -->
+      <article class="page page--dark" data-idx="15">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Move</div>
+          <h2 class="section" style="color: var(--ivory);">Phase One on LinkedIn.<br/><em style="color: var(--gold); font-style: normal;">Phase Two on owned ground.</em></h2>
+          <hr class="gold-rule" />
+          <p class="lead" style="color: var(--ivory); max-width: 64ch;">LinkedIn is rented real estate. The audience is theirs, the algorithm is theirs, the rules are theirs. You start there because that's where your readers already are. You don't stay there — because nothing you build is yours unless it lives on your ground.</p>
+
+          <div class="phase-shift">
+            <div class="ps-col">
+              <div class="ps-period">Jun · Jul · Aug</div>
+              <div class="ps-label">Phase One</div>
+              <h4 class="ps-title">LinkedIn primary</h4>
+              <p class="ps-desc">Build the audience where it already gathers. Publish 3× weekly. Let the platform do the discovery work. By August 31: 36+ articles, 500–1,000+ subscribers, visible authority.</p>
+              <ul class="ps-list">
+                <li><b>What it gives you.</b> Reach. Discovery. Proof the rhythm holds.</li>
+                <li><b>What it costs.</b> Every reader you earn is on someone else's terms. The list isn't yours.</li>
+              </ul>
+            </div>
+            <div class="ps-arrow">
+              <div class="ps-arrow-date">Sept 1</div>
+              <div class="ps-arrow-line"></div>
+              <div class="ps-arrow-mark">→</div>
+              <div class="ps-arrow-label">The Move</div>
+            </div>
+            <div class="ps-col primary">
+              <div class="ps-period">Sept onward</div>
+              <div class="ps-label">Phase Two</div>
+              <h4 class="ps-title">Website primary</h4>
+              <p class="ps-desc">Articles publish on your site first; LinkedIn becomes the syndication layer. The email list grows on your terms. The archive is yours. The traffic is yours. The audience is yours.</p>
+              <ul class="ps-list">
+                <li><b>What you gain.</b> Ownership. Compounding archive. An email list no platform can take.</li>
+                <li><b>What it requires.</b> Website refresh complete (Jul 31). Sign-up flow live. Discipline to post LinkedIn second, not first.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="ownership-note">
+            <div class="own-tag">The principle</div>
+            <p class="own-text">You don't build a credible practice on land you don't own. <em>LinkedIn is the room you visit. The website is the house you live in.</em></p>
+          </div>
+        </div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>Part Two · The Move</span><span class="rule"></span><span class="num">16</span></div>
+      </article>
+
+      <!-- ============ PAGE 17 · THE WEBSITE ============ -->
+      <article class="page" data-idx="16">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Owned Ground</div>
+          <h2 class="section">What the<br/>site carries.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Eight sections. Each earns its place. The website is not a brochure — it's the credibility anchor, the archive, and the door customers, clients, and coachees walk through to work with you.</p>
+
+          <div class="site-map">
+            <div class="site-section">
+              <div class="site-n">01</div>
+              <div class="site-info">
+                <div class="site-name">Hero · Your Positioning</div>
+                <p class="site-desc">One sentence above the fold — the public positioning statement. A clear photograph. One action: subscribe to The Letter.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">02</div>
+              <div class="site-info">
+                <div class="site-name">Your Story</div>
+                <p class="site-desc">Where you come from, what you've seen, why this work. JPMorgan, emerging markets, multiple sectors — written like a person, not a CV.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">03</div>
+              <div class="site-info">
+                <div class="site-name">The Problem You Solve</div>
+                <p class="site-desc">The gap between learning and work. The cost of unverified capability. The visible problem your reader is already living with.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">04</div>
+              <div class="site-info">
+                <div class="site-name">Your Frameworks</div>
+                <p class="site-desc">Verifiable Talent Standard™ · Hiring System Redesign™ · Last Mile Engine. Each with a paragraph, a visual, and a link to a deeper essay.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">05</div>
+              <div class="site-info">
+                <div class="site-name">Case Studies</div>
+                <p class="site-desc">Banking · Oil &amp; Gas · Public Sector · Development Partners. Real organisations, real before/after, real outcomes. Two by August. Four by October.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">06</div>
+              <div class="site-info">
+                <div class="site-name">Speaking</div>
+                <p class="site-desc">Bio, four topics, video clip, one-sheet PDF, booking form. Designed for an event organiser to decide in three minutes.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">07</div>
+              <div class="site-info">
+                <div class="site-name">The Letter · Newsletter Signup</div>
+                <p class="site-desc">Your owned list, not LinkedIn's. Welcome sequence. Archive of past essays. The instrument that survives any platform change.</p>
+              </div>
+            </div>
+            <div class="site-section">
+              <div class="site-n">08</div>
+              <div class="site-info">
+                <div class="site-name">Work With Me</div>
+                <p class="site-desc">Three clear paths: Speaking inquiry · Consulting engagement · 1:1 Coaching. Pricing visible. Booking simple.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="site-footer">
+            <div class="site-foot-row">
+              <div class="site-foot-l">Deadline</div>
+              <div class="site-foot-r">Live by <b>July 31</b></div>
+            </div>
+            <div class="site-foot-row">
+              <div class="site-foot-l">Becomes primary</div>
+              <div class="site-foot-r"><b>September 1</b> — the move begins</div>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Two · The Website</span><span class="rule"></span><span class="num">17</span></div>
+      </article>
+
+      <!-- ============ PAGE 18 · THE PRIVATE LETTER ============ -->
+      <article class="page page--dark" data-idx="17">
+        <div class="page-inner">
+          <div class="eyebrow">Part Two · The Inner Layer</div>
+          <h2 class="section" style="color: var(--ivory);">The Private Letter.<br/><em style="color: var(--gold); font-style: normal; font-size: 36px; letter-spacing: 0.04em;">For a smaller room.</em></h2>
+          <hr class="gold-rule" />
+          <p class="lead" style="color: var(--ivory); max-width: 60ch;">The public newsletter teaches. The Private Letter does something different — it lets a small, chosen circle see the work as it's being built. Same voice. Smaller room. Higher trust.</p>
+
+          <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; margin-top: 28px; align-items: start;">
+            <div>
+              <h3 class="sub" style="color: var(--ivory);">What it carries</h3>
+              <ul class="dash" style="margin-top: 12px;">
+                <li style="color: rgba(245,243,237,0.82);"><b style="color: var(--ivory);">Working thinking.</b> The essays before they're polished for LinkedIn. The notes you'd only share with people already in the conversation.</li>
+                <li style="color: rgba(245,243,237,0.82);"><b style="color: var(--ivory);">Behind the build.</b> What you're designing right now — frameworks in draft, case studies forming, the decisions that didn't make it public yet.</li>
+                <li style="color: rgba(245,243,237,0.82);"><b style="color: var(--ivory);">Inside reading.</b> One book, one paper, or one conversation each month — with your annotation, not a summary.</li>
+                <li style="color: rgba(245,243,237,0.82);"><b style="color: var(--ivory);">Early access.</b> Speaking video drafts, new framework releases, and consulting offers shared here first.</li>
+              </ul>
+
+              <hr class="thin-rule" />
+
+              <h3 class="sub" style="color: var(--ivory);">Why a private layer matters</h3>
+              <p class="body" style="margin-top: 10px; color: rgba(245,243,237,0.78);">The public newsletter builds the audience. The Private Letter builds the patron base — the smaller group who fund the work, refer the work, and stay close to it over years. Different intent, different value, different room. They reinforce each other.</p>
+            </div>
+
+            <div style="border: 1px solid rgba(212,175,55,0.4); padding: 24px 26px; background: rgba(212,175,55,0.06);">
+              <div style="font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); font-weight: 600;">The offering</div>
+              <h4 style="font-family: var(--display); font-size: 34px; color: var(--ivory); margin-top: 6px; line-height: 1.05;">The Private Letter</h4>
+              <p style="font-size: 12.5px; line-height: 1.55; color: rgba(245,243,237,0.72); margin-top: 12px;">Monthly. Long form. Audience-capped. By invitation or subscription.</p>
+
+              <div style="margin-top: 22px; display: grid; gap: 14px;">
+                <div style="display: grid; grid-template-columns: 90px 1fr; gap: 14px; align-items: baseline; padding-bottom: 12px; border-bottom: 1px solid rgba(245,243,237,0.16);">
+                  <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(245,243,237,0.55); font-weight: 600;">Cadence</div>
+                  <div style="font-size: 13px; color: var(--ivory);">Once monthly · long form essay</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 90px 1fr; gap: 14px; align-items: baseline; padding-bottom: 12px; border-bottom: 1px solid rgba(245,243,237,0.16);">
+                  <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(245,243,237,0.55); font-weight: 600;">Audience</div>
+                  <div style="font-size: 13px; color: var(--ivory);">Capped at 100 readers in year one</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 90px 1fr; gap: 14px; align-items: baseline; padding-bottom: 12px; border-bottom: 1px solid rgba(245,243,237,0.16);">
+                  <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(245,243,237,0.55); font-weight: 600;">Drawn from</div>
+                  <div style="font-size: 13px; color: var(--ivory);">Top public-newsletter readers, past clients, your network</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 90px 1fr; gap: 14px; align-items: baseline;">
+                  <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(245,243,237,0.55); font-weight: 600;">Pricing</div>
+                  <div style="font-size: 13px; color: var(--ivory);">£15 – £25 per month · or £150 annual</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 26px; padding-top: 18px; border-top: 1px dashed rgba(212,175,55,0.4);">
+                <div style="font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); font-weight: 700;">Launch</div>
+                <div style="font-family: var(--display); font-size: 42px; color: var(--ivory); line-height: 1; margin-top: 6px;">September 2026</div>
+                <p style="font-size: 11px; color: rgba(245,243,237,0.6); margin-top: 8px; line-height: 1.5;">Bring forward to July if the public newsletter is at 1,000+ subscribers and the rhythm has held for 60 days.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 22px;">
+            <p class="pull" style="color: var(--ivory); font-size: 26px; max-width: 50ch;">Public for the audience. <em>Private for the patrons.</em></p>
+          </div>
+        </div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>Part Two · The Private Letter</span><span class="rule"></span><span class="num">18</span></div>
+      </article>
+
+      <!-- ============ PAGE 15 · SPEAKING ROADMAP ============ -->
+      <article class="page" data-idx="18">
+        <div class="page-inner">
+          <div class="eyebrow">Part Three · Speaking Roadmap</div>
+          <h2 class="section">From invisible<br/>to invited.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Speaking does four things at once: proves the thinking, builds portfolio assets, creates revenue, compounds authority. Without it, everything in Parts 1–2 stays theoretical.</p>
+
+          <h3 class="sub" style="margin-top: 22px;">Your four speaking topics</h3>
+          <div class="topics">
+            <div class="topic">
+              <div class="n">01</div>
+              <div class="title">From CVs to Capability: Why Hiring Must Change in the AI Era<small>For HR leaders, talent officers, and OD teams. The Verifiable Talent Standard™ in plain language — proof over promises.</small></div>
+              <div class="price">Conference talk<b>£500 – £2,000</b></div>
+            </div>
+            <div class="topic">
+              <div class="n">02</div>
+              <div class="title">From Learning to Work: Closing the Last Mile Gap<small>For L&amp;D leaders and effectiveness teams. Your Last Mile Engine framework — training that actually transfers to performance.</small></div>
+              <div class="price">Half-day workshop<b>£2,000 – £5,000</b></div>
+            </div>
+            <div class="topic">
+              <div class="n">03</div>
+              <div class="title">Building for Sustainability: Infrastructure Over Optics<small>For corporate and emerging-market leaders. Why quick fixes fail and infrastructure-first thinking compounds.</small></div>
+              <div class="price">Retreat keynote<b>£2,000 – £5,000</b></div>
+            </div>
+            <div class="topic">
+              <div class="n">04</div>
+              <div class="title">Proof Over Promises: How to Verify Real Capability<small>For hiring managers, executive search, and corporate talent teams. Your core conviction made operational.</small></div>
+              <div class="price">Custom programme<b>£5,000 – £15,000</b></div>
+            </div>
+          </div>
+
+          <hr class="thin-rule" />
+          <div class="three-col" style="gap: 28px;">
+            <div>
+              <h3 class="sub">By July 1</h3>
+              <p class="body" style="font-size: 13px; margin-top: 8px;">Avatar locked. 200-word bio. Four topic descriptions. 5–10 min speaking video recorded.</p>
+            </div>
+            <div>
+              <h3 class="sub">By June 30</h3>
+              <p class="body" style="font-size: 13px; margin-top: 8px;">15 UK events + 10 Nigerian events researched. 20 podcasts identified. 10–15 event pitches sent.</p>
+            </div>
+            <div>
+              <h3 class="sub">By July 31</h3>
+              <p class="body" style="font-size: 13px; margin-top: 8px;">2–3 speaking engagements confirmed. 1–2 podcast interviews recorded. First testimonials collected.</p>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Three · Speaking</span><span class="rule"></span><span class="num">19</span></div>
+      </article>
+
+      <!-- ============ PAGE 16 · REVENUE ============ -->
+      <article class="page" data-idx="19">
+        <div class="page-inner">
+          <div class="eyebrow">Part Four · How you actually make money</div>
+          <h2 class="section">Four revenue streams.<br/>One coherent practice.</h2>
+          <hr class="gold-rule" />
+          <p class="lead">Not all are active yet. This is the roadmap from designed → marketed → flowing. Speaking is the leading edge; consulting and coaching follow; licensing compounds.</p>
+
+          <div class="rev-grid">
+            <div class="rev">
+              <div class="tag">Stream 01 · Highest leverage</div>
+              <h4>Speaking Engagements</h4>
+              <p>One stage, 100–500 people, fastest authority build. Funnels into consulting and coaching inquiries.</p>
+              <div class="range"><span>Per engagement</span><b>£500 – £15,000</b></div>
+            </div>
+            <div class="rev">
+              <div class="tag">Stream 02 · Project work</div>
+              <h4>Consulting</h4>
+              <p>Audit &amp; redesign, problem diagnostic, or implementation support. 2–12 week engagements; your frameworks productised.</p>
+              <div class="range"><span>Per project</span><b>£2,000 – £15,000</b></div>
+            </div>
+            <div class="rev">
+              <div class="tag">Stream 03 · Recurring</div>
+              <h4>1:1 Coaching</h4>
+              <p>VPs, managers, founders. 2× per month, 3–6 month minimum. Your thinking applied to their specific context.</p>
+              <div class="range"><span>Per month</span><b>£500 – £2,000</b></div>
+            </div>
+            <div class="rev">
+              <div class="tag">Stream 04 · Scalable</div>
+              <h4>Licensing</h4>
+              <p>Other coaches and L&amp;D professionals license your frameworks. Verifiable Talent Standard™, Hiring System Redesign™, Last Mile Engine.</p>
+              <div class="range"><span>Per licence</span><b>£200 – £10,000</b></div>
+            </div>
+          </div>
+
+          <hr class="thin-rule" />
+          <div class="two-col" style="gap: 36px;">
+            <div>
+              <h3 class="sub">Pipeline target · End of September</h3>
+              <ul class="dash" style="margin-top: 8px;">
+                <li>2–3 speaking engagements booked</li>
+                <li>1 consulting project active</li>
+                <li>1–2 coaching clients signed</li>
+                <li>Newsletter list 500–1,000+ subscribers</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="sub">Annual run rate by September</h3>
+              <p class="pull" style="font-size: 44px; margin-top: 4px;">£30 – 50k<em style="font-size: 22px; display: block; margin-top: 6px;">growing to £70 – 140k+ at Level 3</em></p>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Four · Revenue Model</span><span class="rule"></span><span class="num">20</span></div>
+      </article>
+
+      <!-- ============ PAGE 17 · 90 DAY ============ -->
+      <article class="page" data-idx="20">
+        <div class="page-inner">
+          <div class="eyebrow">Part Five · 90-Day Execution</div>
+          <h2 class="section">The path,<br/>by date.</h2>
+          <hr class="gold-rule" />
+          <p class="lead" style="margin-bottom: 6px;">May 25 → August 31. Each step is small. The sequence is not. This is how Level 2 starts to hold.</p>
+
+          <div class="two-col" style="gap: 48px; margin-top: 18px; align-items: start;">
+            <div class="timeline">
+              <div class="step done">
+                <div class="date">May 25</div>
+                <h5>Lock the client avatar</h5>
+                <p>One paragraph. Sector, role, problem, what they value. The foundation for everything that follows.</p>
+              </div>
+              <div class="step">
+                <div class="date">May 29</div>
+                <h5>LinkedIn profile refreshed</h5>
+                <p>New headshot, new headline, About section rewritten, Featured section pointing to the newsletter.</p>
+              </div>
+              <div class="step">
+                <div class="date">June 1</div>
+                <h5>Newsletter launches</h5>
+                <p>First three articles published. Weekly rhythm begins. Website signup live. Revenue tracking spreadsheet open.</p>
+              </div>
+              <div class="step">
+                <div class="date">June 15</div>
+                <h5>Business setup &amp; pricing locked</h5>
+                <p>Entity, contracts, banking. Speaking, consulting, coaching prices on paper. Peer profile complete. 25 events researched.</p>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="step">
+                <div class="date">July 1</div>
+                <h5>Speaking video recorded</h5>
+                <p>5–10 minutes, one topic, real audio. Practice pause defined. 12+ articles published — consistency proven.</p>
+              </div>
+              <div class="step">
+                <div class="date">July 31</div>
+                <h5>Website refresh live</h5>
+                <p>Speaking, consulting, coaching pages live. Case studies drafted. 2–3 speaking engagements confirmed.</p>
+              </div>
+              <div class="step">
+                <div class="date">August 31</div>
+                <h5>Level 2 holds</h5>
+                <p>20+ articles published. Newsletter at 500–1,000+. First speaking delivered. 1 consulting project active. 1–2 coaching clients signed. Revenue arriving.</p>
+              </div>
+              <div class="step">
+                <div class="date">12 months</div>
+                <h5>Level 3 · Reclaiming</h5>
+                <p>One venture with clear traction. Inbound invitations. Known for something specific. Authority developing — not performed.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-meta"><span>Part Five · 90-Day Execution</span><span class="rule"></span><span class="num">21</span></div>
+      </article>
+
+      <!-- ============ PAGE 18 · THE CHOICE ============ -->
+      <article class="page page--dark" data-idx="21">
+        <div class="page-inner">
+          <div class="eyebrow">Closing</div>
+          <h1 class="display" style="color: var(--ivory); margin-top: 16px;">The thinking<br/>is already done.<br/><em style="color: var(--gold); font-style: normal;">Now: execute.</em></h1>
+
+          <div class="choice">
+            <div class="opt A">
+              <div class="lbl">Option A · Continue</div>
+              <h4>Stay the course.</h4>
+              <ul>
+                <li>Multiple ventures, equal weight, no integration.</li>
+                <li>Some money, never quite stable.</li>
+                <li>Frameworks remain locked in Google Docs.</li>
+                <li>Network adjusts; expectations lower.</li>
+                <li>The vision never becomes real.</li>
+              </ul>
+            </div>
+            <div class="opt B">
+              <div class="lbl">Option B · Move</div>
+              <h4>Build Level 3.</h4>
+              <ul>
+                <li>Commit to newsletter and visibility for 90 days.</li>
+                <li>Execute the revenue model in sequence.</li>
+                <li>Close the playbook gaps by August 31.</li>
+                <li>Reach Level 2 by October, Level 3 by next year.</li>
+                <li>£70k–£140k+ annually. Authority that holds.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(245,243,237,0.18);">
+            <div style="font-family: var(--system); font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 14px;">Read this alongside</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 28px;">
+              <div style="display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(245,243,237,0.12); font-size: 12px; color: rgba(245,243,237,0.78); line-height: 1.4;"><span style="font-family: var(--display); color: var(--gold); font-size: 16px;">i</span><div>Mid-Year Diagnostic · <b style="color: var(--ivory); font-weight: 600;">Part 1 — Where You Are</b></div></div>
+              <div style="display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(245,243,237,0.12); font-size: 12px; color: rgba(245,243,237,0.78); line-height: 1.4;"><span style="font-family: var(--display); color: var(--gold); font-size: 16px;">ii</span><div>Online Presence · <b style="color: var(--ivory); font-weight: 600;">Part 2 — 4-Platform Strategy</b></div></div>
+              <div style="display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(245,243,237,0.12); font-size: 12px; color: rgba(245,243,237,0.78); line-height: 1.4;"><span style="font-family: var(--display); color: var(--gold); font-size: 16px;">iii</span><div>Revenue Model · <b style="color: var(--ivory); font-weight: 600;">Part 3 — Streams &amp; Infrastructure</b></div></div>
+              <div style="display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(245,243,237,0.12); font-size: 12px; color: rgba(245,243,237,0.78); line-height: 1.4;"><span style="font-family: var(--display); color: var(--gold); font-size: 16px;">iv</span><div>Speaking Profile · <b style="color: var(--ivory); font-weight: 600;">Part 4 — Booking Roadmap</b></div></div>
+              <div style="display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(245,243,237,0.12); font-size: 12px; color: rgba(245,243,237,0.78); line-height: 1.4;"><span style="font-family: var(--display); color: var(--gold); font-size: 16px;">v</span><div>Practice Playbook · <b style="color: var(--ivory); font-weight: 600;">Completion Checklist</b></div></div>
+              <div style="display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(245,243,237,0.12); font-size: 12px; color: rgba(245,243,237,0.78); line-height: 1.4;"><span style="font-family: var(--display); color: var(--gold); font-size: 16px;">vi</span><div>Sync Profile Report · <b style="color: var(--ivory); font-weight: 600;">Strength-Based Diagnostic</b></div></div>
+            </div>
+            <p style="font-size: 11px; color: rgba(245,243,237,0.55); margin-top: 16px; line-height: 1.55; max-width: 56ch;">This document is the map. The six accompanying documents are the terrain — the evidence, the exact language, the worksheets. Open them next.</p>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(245,243,237,0.18); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px;">
+            <p class="pull" style="color: var(--ivory); font-size: 26px; max-width: 30ch;">Calm is a strategy.<br/>Slow is strength.<br/><em>There's no rush in purpose.</em></p>
+            <div style="text-align: right; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(245,243,237,0.5); font-weight: 600;">
+              End of report<br/>
+              <span style="color: var(--gold); font-family: var(--display); font-size: 22px; letter-spacing: 0; text-transform: none; display: inline-block; margin-top: 8px;">No Gra Gra</span>
+            </div>
+          </div>
+        </div>
+        <div class="folio" style="right: 56px; bottom: 56px; font-size: 240px;">XXII</div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>The Choice · End of Report</span><span class="rule"></span><span class="num">22</span></div>
+      </article>
+
+      <!-- ============ PAGE 23 · 90-DAY PROGRESS TRACKER ============ -->
+      <article class="page page--dark" data-idx="22">
+        <div class="page-inner" style="padding-bottom: 80px; overflow: hidden;">
+          <div class="eyebrow">The Tracker · Your Progress</div>
+          <h2 class="section" style="color: var(--ivory); font-size: 40px;">90-Day Progress<br/><em style="color: var(--gold); font-style: normal;">Tracker.</em></h2>
+          <hr class="gold-rule" />
+
+          <!-- Progress bar -->
+          <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+            <div style="flex: 1; height: 3px; background: rgba(245,243,237,0.14); position: relative; border-radius: 2px;">
+              <div id="tracker-bar" style="position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); border-radius: 2px; transition: width 400ms cubic-bezier(.55,.08,.2,1); width: 0%;"></div>
+            </div>
+            <div id="tracker-count" style="font-family: var(--system); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(245,243,237,0.55); white-space: nowrap;">0 of 25 complete</div>
+          </div>
+
+          <!-- Two-column milestones -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; flex: 1; overflow: hidden;">
+
+            <!-- LEFT COLUMN -->
+            <div>
+              <!-- May 25 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">May 25</div>
+                <label class="tracker-task" data-id="may25_avatar">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Lock the client avatar — one paragraph, sector, role, problem, what they value</span>
+                </label>
+              </div>
+              <!-- May 29 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">May 29</div>
+                <label class="tracker-task" data-id="may29_linkedin">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">LinkedIn profile refreshed — new headshot, headline, About section, Featured pointing to newsletter</span>
+                </label>
+              </div>
+              <!-- June 1 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">June 1</div>
+                <label class="tracker-task" data-id="jun1_newsletter">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Newsletter launches — first three articles published</span>
+                </label>
+                <label class="tracker-task" data-id="jun1_rhythm">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Weekly rhythm begins</span>
+                </label>
+                <label class="tracker-task" data-id="jun1_signup">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Website signup live</span>
+                </label>
+                <label class="tracker-task" data-id="jun1_revenue">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Revenue tracking spreadsheet open</span>
+                </label>
+              </div>
+              <!-- June 15 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">June 15</div>
+                <label class="tracker-task" data-id="jun15_biz">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Business setup complete — entity, contracts, banking</span>
+                </label>
+                <label class="tracker-task" data-id="jun15_pricing">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Speaking, consulting, coaching prices on paper</span>
+                </label>
+                <label class="tracker-task" data-id="jun15_events">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">25 events researched</span>
+                </label>
+              </div>
+              <!-- July 1 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">July 1</div>
+                <label class="tracker-task" data-id="jul1_video">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Speaking video recorded — 5–10 minutes, one topic, real audio</span>
+                </label>
+                <label class="tracker-task" data-id="jul1_pause">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Practice pause defined</span>
+                </label>
+                <label class="tracker-task" data-id="jul1_articles">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">12+ articles published — consistency proven</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div>
+              <!-- July 31 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">July 31</div>
+                <label class="tracker-task" data-id="jul31_website">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Website refresh live — speaking, consulting, coaching pages</span>
+                </label>
+                <label class="tracker-task" data-id="jul31_cases">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Case studies drafted</span>
+                </label>
+                <label class="tracker-task" data-id="jul31_speaking">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">2–3 speaking engagements confirmed</span>
+                </label>
+              </div>
+              <!-- August 31 -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">August 31</div>
+                <label class="tracker-task" data-id="aug31_articles">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">20+ articles published</span>
+                </label>
+                <label class="tracker-task" data-id="aug31_subscribers">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Newsletter at 500–1,000+ subscribers</span>
+                </label>
+                <label class="tracker-task" data-id="aug31_speaking">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">First speaking engagement delivered</span>
+                </label>
+                <label class="tracker-task" data-id="aug31_consulting">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">1 consulting project active</span>
+                </label>
+                <label class="tracker-task" data-id="aug31_coaching">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">1–2 coaching clients signed</span>
+                </label>
+                <label class="tracker-task" data-id="aug31_revenue">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Revenue arriving</span>
+                </label>
+              </div>
+              <!-- 12 Months -->
+              <div style="margin-bottom: 14px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 5px;">12 Months</div>
+                <label class="tracker-task" data-id="yr1_traction">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">One venture with clear traction</span>
+                </label>
+                <label class="tracker-task" data-id="yr1_inbound">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Inbound invitations arriving</span>
+                </label>
+                <label class="tracker-task" data-id="yr1_known">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Known for something specific</span>
+                </label>
+                <label class="tracker-task" data-id="yr1_authority">
+                  <span class="tracker-box"></span>
+                  <span class="tracker-label">Authority developing — not performed</span>
+                </label>
+              </div>
+
+              <!-- Key Metrics -->
+              <div style="border-top: 1px solid rgba(245,243,237,0.16); padding-top: 12px;">
+                <div style="font-family: var(--system); font-size: 9px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold-matte); margin-bottom: 10px;">Key Metrics</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="metric-counter">
+                    <div class="metric-label">Articles Published</div>
+                    <div class="metric-controls">
+                      <button class="metric-btn" data-metric="articles" data-dir="-1">−</button>
+                      <span class="metric-val" id="metric-articles">0</span>
+                      <button class="metric-btn" data-metric="articles" data-dir="1">+</button>
+                    </div>
+                  </div>
+                  <div class="metric-counter">
+                    <div class="metric-label">Newsletter Subscribers</div>
+                    <div class="metric-controls">
+                      <button class="metric-btn" data-metric="subscribers" data-dir="-1">−</button>
+                      <span class="metric-val" id="metric-subscribers">0</span>
+                      <button class="metric-btn" data-metric="subscribers" data-dir="1">+</button>
+                    </div>
+                  </div>
+                  <div class="metric-counter">
+                    <div class="metric-label">Speaking Bookings</div>
+                    <div class="metric-controls">
+                      <button class="metric-btn" data-metric="speaking" data-dir="-1">−</button>
+                      <span class="metric-val" id="metric-speaking">0</span>
+                      <button class="metric-btn" data-metric="speaking" data-dir="1">+</button>
+                    </div>
+                  </div>
+                  <div class="metric-counter">
+                    <div class="metric-label">Coaching Clients</div>
+                    <div class="metric-controls">
+                      <button class="metric-btn" data-metric="coaching" data-dir="-1">−</button>
+                      <span class="metric-val" id="metric-coaching">0</span>
+                      <button class="metric-btn" data-metric="coaching" data-dir="1">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="folio" style="right: 56px; bottom: 56px; font-size: 200px;">XXIII</div>
+        <div class="page-meta" style="color: rgba(245,243,237,0.45);"><span>The Tracker · Your Progress</span><span class="rule"></span><span class="num">23</span></div>
+      </article>
+
+    </div>
+  </div>
+
+  <nav class="controls">
+    <button class="ctrl" id="prev" aria-label="Previous page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <div class="dots" id="dots"></div>
+    <button class="ctrl" id="next" aria-label="Next page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </nav>
+
+</div>
+
+<script>
+(function(){
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const total = pages.length;
+  const cur = document.getElementById('cur');
+  const tot = document.getElementById('total');
+  const fill = document.getElementById('fill');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const dotsEl = document.getElementById('dots');
+  const book = document.getElementById('book');
+  const bookWrap = document.querySelector('.book-wrap');
+
+  tot.textContent = total;
+
+  // Build dot indicators
+  for (let i = 0; i < total; i++) {
+    const b = document.createElement('button');
+    b.className = 'dot' + (i === 0 ? ' active' : '');
+    b.setAttribute('data-go', i);
+    b.title = 'Page ' + (i+1);
+    dotsEl.appendChild(b);
+  }
+  const dots = Array.from(dotsEl.children);
+
+  let idx = 0;
+  let busy = false;
+
+  function applyState() {
+    pages.forEach((p, i) => {
+      p.classList.remove('is-current', 'is-prev', 'is-next', 'is-hidden', 'flipping');
+      if (i < idx) p.classList.add('is-prev');
+      else if (i === idx) p.classList.add('is-current');
+      else if (i === idx + 1) p.classList.add('is-next');
+      else p.classList.add('is-hidden');
+    });
+    cur.textContent = idx + 1;
+    fill.style.width = ((idx) / (total - 1) * 100) + '%';
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === total - 1;
+  }
+
+  function goTo(target) {
+    if (busy) return;
+    if (target < 0 || target > total - 1 || target === idx) return;
+    busy = true;
+
+    if (target > idx) {
+      // Forward: flip current page away
+      const current = pages[idx];
+      current.classList.add('flipping');
+      current.style.transform = 'rotateY(-180deg)';
+      // Reveal next pages
+      setTimeout(() => {
+        idx = target;
+        // Reset all transforms via class application
+        pages.forEach(p => p.style.transform = '');
+        applyState();
+        busy = false;
+      }, 900);
+    } else {
+      // Backward: bring previous page back from -180
+      const prev = pages[idx - 1];
+      // Show it on top first
+      pages.forEach(p => p.classList.remove('is-current','is-prev','is-next','is-hidden'));
+      pages.forEach((p, i) => {
+        if (i < idx - 1) p.classList.add('is-prev');
+        else if (i === idx - 1) { p.classList.add('is-current'); }
+        else if (i === idx) { p.classList.add('is-prev'); }
+        else p.classList.add('is-hidden');
+      });
+      // Force the to-be-current page to start flipped, then animate to 0
+      prev.style.transition = 'none';
+      prev.style.transform = 'rotateY(-180deg)';
+      prev.classList.add('flipping');
+      // Force reflow
+      void prev.offsetWidth;
+      prev.style.transition = '';
+      prev.style.transform = 'rotateY(0deg)';
+      setTimeout(() => {
+        idx = target;
+        pages.forEach(p => { p.style.transform = ''; p.style.transition = ''; });
+        applyState();
+        busy = false;
+      }, 900);
+    }
+  }
+
+  function next() { goTo(idx + 1); }
+  function prev() { goTo(idx - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  dotsEl.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-go]');
+    if (!t) return;
+    goTo(parseInt(t.getAttribute('data-go'), 10));
+  });
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-go]');
+    if (t && !dotsEl.contains(t)) {
+      goTo(parseInt(t.getAttribute('data-go'), 10));
+    }
+  });
+
+  // Click on page edges to navigate
+  book.addEventListener('click', (e) => {
+    if (busy) return;
+    if (e.target.closest('[data-go]')) return;
+    if (e.target.closest('.toc-row')) return;
+    const rect = book.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x > rect.width * 0.6) next();
+    else if (x < rect.width * 0.18) prev();
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { goTo(0); }
+    else if (e.key === 'End') { goTo(total - 1); }
+  });
+
+  // Responsive scale — keep page fitting viewport.
+  // Transform: scale() doesn't shrink the layout box, so we also apply negative
+  // margins equal to the scaled-down dimensions so flex/grid centering uses the
+  // visually scaled footprint.
+  function fit() {
+    const stagePad = 140; // header + controls + gaps
+    const availH = window.innerHeight - stagePad;
+    const availW = window.innerWidth - 80;
+    const targetW = 880, targetH = 1180;
+    const scale = Math.min(availW / targetW, availH / targetH, 1);
+    book.style.setProperty('--book-scale', scale);
+    const dx = (scale - 1) * targetW / 2;
+    const dy = (scale - 1) * targetH / 2;
+    book.style.margin = dy + 'px ' + dx + 'px';
+  }
+  fit();
+  window.addEventListener('resize', fit);
+
+  applyState();
+})();
+
+// ---------- Tracker localStorage logic ----------
+(function(){
+  const STORAGE_KEY = 'autonomy-path-tracker';
+  const TOTAL_TASKS = 25;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return { tasks: {}, metrics: { articles: 0, subscribers: 0, speaking: 0, coaching: 0 } };
+  }
+
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  function updateProgressUI(state) {
+    const done = Object.values(state.tasks).filter(Boolean).length;
+    const pct = TOTAL_TASKS > 0 ? (done / TOTAL_TASKS * 100) : 0;
+    const bar = document.getElementById('tracker-bar');
+    const count = document.getElementById('tracker-count');
+    if (bar) bar.style.width = pct + '%';
+    if (count) count.textContent = done + ' of ' + TOTAL_TASKS + ' complete';
+  }
+
+  function applyTaskState(label, checked) {
+    label.classList.toggle('is-done', !!checked);
+  }
+
+  function applyMetricState(state) {
+    ['articles','subscribers','speaking','coaching'].forEach(function(key) {
+      const el = document.getElementById('metric-' + key);
+      if (el) el.textContent = state.metrics[key] || 0;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const state = loadState();
+
+    // Init tasks
+    document.querySelectorAll('.tracker-task').forEach(function(label) {
+      const id = label.getAttribute('data-id');
+      applyTaskState(label, state.tasks[id]);
+
+      label.addEventListener('click', function(e) {
+        e.preventDefault();
+        state.tasks[id] = !state.tasks[id];
+        applyTaskState(label, state.tasks[id]);
+        updateProgressUI(state);
+        saveState(state);
+      });
+    });
+
+    // Init metrics
+    applyMetricState(state);
+    updateProgressUI(state);
+
+    document.querySelectorAll('.metric-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const metric = btn.getAttribute('data-metric');
+        const dir = parseInt(btn.getAttribute('data-dir'), 10);
+        state.metrics[metric] = Math.max(0, (state.metrics[metric] || 0) + dir);
+        const el = document.getElementById('metric-' + metric);
+        if (el) el.textContent = state.metrics[metric];
+        saveState(state);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
